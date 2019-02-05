@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gamelist>
+    <game id="1">
+        <nom>Mastermind</nom>
+        <description>Le but : découvrir la combinaison à x chiffres/couleurs de l'adversaire (le défenseur). Pour ce faire, l'attaquant fait une proposition. Le défenseur indique pour chaque proposition le nombre de chiffre/couleur de la proposition qui apparaissent à la bonne place et à la mauvaise place dans la combinaison secrète. L'attaquant doit deviner la combinaison secrète en un nombre limité d'essais.</description>
+        <tailleCombinaison>4</tailleCombinaison>
+        <maxEssais>10</maxEssais>
+        <modeDebug>true</modeDebug>
+        <nombreCouleurs>5</nombreCouleurs>
+    </game>
+    <game id="2">
+        <nom>Recherche +/-</nom>
+        <description>Le but : découvrir la combinaison à x chiffres de l'adversaire (le défenseur). Pour ce faire, l'attaquant fait une proposition. Le défenseur indique pour chaque chiffre de la combinaison proposée si le chiffre de sa combinaison est plus grand (+), plus petit (-) ou si c'est le bon chiffre (=). L'attaquant doit deviner la combinaison secrète en un nombre limité d'essais.</description>
+        <tailleCombinaison>4</tailleCombinaison>
+        <maxEssais>10</maxEssais>
+        <modeDebug>true</modeDebug>
+    </game>
+</gamelist>
