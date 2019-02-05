@@ -79,6 +79,7 @@ public class Menu {
                 break;
             case 2 :
                 System.out.println("******** Défenseur ********");
+                System.out.println("Choisissez une combinaison, vous l'avez ? Retenez-la, le jeu démarre");
                 break;
             case 3 :
                 System.out.println("******** Duel ********");
