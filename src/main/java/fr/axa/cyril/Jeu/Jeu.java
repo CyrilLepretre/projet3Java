@@ -2,6 +2,7 @@ package fr.axa.cyril.Jeu;
 
 import fr.axa.cyril.Menu.Configuration;
 
+import java.util.List;
 import java.util.Scanner;
 
 public abstract class Jeu {
@@ -40,6 +41,8 @@ public abstract class Jeu {
         int nombreEssaisRestants = configuration.getMaxEssais();
         Scanner scanner;
         String saisieUtilisateur;
+        String valeursOK;
+        String valeursKO;
         boolean jeuFini = false;
         if (mode == 1) {
             String combinaisonAtrouver = this.genererCombinaison(this.configuration.getTailleCombinaison(), listePossibilites);
@@ -61,8 +64,19 @@ public abstract class Jeu {
             String combinaisonEnCours= "";
             while ((nombreEssaisRestants > 0)&&(!jeuFini)) {
                 if (!(combinaisonEnCours.equals(""))) {
-                    scanner = new Scanner(System.in);
-                    saisieUtilisateur = scanner.nextLine();
+                    if (this.getClass().getName() == "RecherchePlusMoins") {
+                        scanner = new Scanner(System.in);
+                        saisieUtilisateur = scanner.nextLine();
+                    }
+                    else {
+                        System.out.println("Combien de couleurs sont à la bonne place : ");
+                        scanner = new Scanner(System.in);
+                        valeursOK = scanner.nextLine();
+                        System.out.println("Combien de couleurs sont à la mauvaise place : ");
+                        valeursKO = scanner.nextLine();
+                        saisieUtilisateur = valeursOK + "-" + valeursKO;
+                    }
+
                 }
                 else {
                     saisieUtilisateur = null;

@@ -6,7 +6,7 @@
         <tailleCombinaison>4</tailleCombinaison>
         <maxEssais>10</maxEssais>
         <modeDebug>true</modeDebug>
-        <nombreCouleurs>5</nombreCouleurs>
+        <nombreCouleurs>6</nombreCouleurs>
     </game>
     <game id="2">
         <nom>Recherche +/-</nom>

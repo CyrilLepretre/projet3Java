@@ -86,7 +86,7 @@ public class Menu {
                 break;
         }
         if (jeuChoisi == 1) {
-            Mastermind mastermind = new Mastermind(mastermindConf, "RVBJMNGCOP");
+            Mastermind mastermind = new Mastermind(mastermindConf, "RVBJMN");
             mastermind.demarrer(modeChoisi);
         }
         else {
