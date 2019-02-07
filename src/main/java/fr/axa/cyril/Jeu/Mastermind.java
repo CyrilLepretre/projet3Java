@@ -1,17 +1,16 @@
 package fr.axa.cyril.Jeu;
 import fr.axa.cyril.Menu.Configuration;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
 public class Mastermind extends Jeu {
-
-    //private List<String> toutesLesPossibilites;
     private List<String> listeCandidats;
+    private int scoreMaximum;
 
-    public Mastermind(Configuration configuration, String listePossibilites) {
-        super(configuration, listePossibilites);
+    public Mastermind(Configuration configuration) {
+        super(configuration);
+        this.scoreMaximum = 10 * this.configuration.getTailleCombinaison();
     }
 
     /**
@@ -24,85 +23,65 @@ public class Mastermind extends Jeu {
      * @param combinaisonAtrouver : chaine de caractères générée à trouver
      * @return true si la combinaison a été trouvée, false sinon
      */
-    public boolean verifierCombinaison(String saisieUtilisateur, String combinaisonAtrouver) {
-        int bienPlaces = 0;
-        int presents = 0;
-        int emplacement;
-        if (saisieUtilisateur.equals(combinaisonAtrouver)) {
-            System.out.println("Félicitations, vous avez gagné !");
+    public boolean verifierCombinaison(String saisieUtilisateur, String combinaisonAtrouver, int nombreEssaisRestants) {
+        int[] tableauScoreObtenu = this.calculerScoreCombinaison(saisieUtilisateur, combinaisonAtrouver);
+        if (transformerTableauScoreEnEntier(tableauScoreObtenu) == scoreMaximum) {
+            System.out.println("Félicitations, vous avez gagné en " + (this.configuration.getMaxEssais() - nombreEssaisRestants) + " essai(s)");
             return true;
-        } else {
-            System.out.println("SAISIE :" + saisieUtilisateur);
-            int[] tableauDeVerification = new int[saisieUtilisateur.length()];
-            for (int i = 0; i < saisieUtilisateur.length(); i++) {
-                if (saisieUtilisateur.charAt(i) == combinaisonAtrouver.charAt(i)) {
-                    tableauDeVerification[i] = 1;
-                    bienPlaces++;
-                }
-            }
-            for (int i = 0; i < saisieUtilisateur.length(); i++) {
-                emplacement = combinaisonAtrouver.indexOf(saisieUtilisateur.charAt(i));
-                if ((emplacement >= 0) && (tableauDeVerification[emplacement] != 1)) {
-                    tableauDeVerification[emplacement] = 1;
-                    presents++;
-                }
-            }
-            System.out.println("Proposition : " + saisieUtilisateur + " -> Réponse : " + bienPlaces + " bien placé(s), " + presents + " présent(s)");
-            return false;
         }
+        else {
+            System.out.println("Proposition : " + saisieUtilisateur + " -> Réponse : " + tableauScoreObtenu[0] + " bien placé(s), " + tableauScoreObtenu[1] + " présent(s)");
+        }
+        return false;
     }
 
     /**
      * Nous utilisons ici l'algorithme de Knuth : le "five guess" (cinq conjonctures)
      * Il s'avère être le plus adapté au problème posé dans le Mastermind, avec une solution trouvée en 5 essais maximum pour
      * le jeu classique 4 trous / 6 couleurs
-     * @param combinaisonEnCours
-     * @param saisieUtilisateur
-     * @return
+     * Le concept part du fait que parmi toutes les propositions possibles, lorqu'on fait une proposition, et que notre adversaire nous indique le score obtenu (les pions bien placés/présents),
+     * la réponse figure forcément parmi les propositions non évaluées, et qui obtienne le même score par rapport à la proposition faite. On fonctionne donc par élimination.
+     * On commence par initialiser la liste des candidats (ie toutes les possibilités au premier tour) qu'on réduira ensuite à chaque itération
+     * @param combinaisonEnCours combinaison de couleurs retournée par l'ordinateur
+     * @param saisieUtilisateur réponse de l'utilisateur qui a indiqué les couleurs bien placées en présentes
+     * @return nouvelle proposition après application de l'algorithme
      */
     public String proposerCombinaison(String combinaisonEnCours, String saisieUtilisateur) {
-        StringBuilder unePossibilite;// = new StringBuilder(this.configuration.getTailleCombinaison());
+        StringBuilder unePossibilite;
         String[] reponseAsplitter;
         int scoreReponse;
         if (combinaisonEnCours.equals("")) {
-            //On va initialiser toutesPossibilites lors du premier tour de recherche
-            //Au départ, la liste des candidats est toute la liste des possibilités, qu'on réduira ensuite à chaque itération
-            //toutesLesPossibilites = new ArrayList<String>();
-            listeCandidats = new ArrayList<String>();
+            listeCandidats = new ArrayList<>();
             for (int i = 0; i < configuration.getNombreCouleurs(); i++) {
                 for (int j = 0; j < configuration.getNombreCouleurs(); j++) {
                     for (int k = 0; k < configuration.getNombreCouleurs(); k++) {
                         for (int m = 0; m < configuration.getNombreCouleurs(); m++) {
                             unePossibilite = new StringBuilder(this.configuration.getTailleCombinaison());
-                            unePossibilite.append(listePossibilites.charAt(i));
-                            unePossibilite.append(listePossibilites.charAt(j));
-                            unePossibilite.append(listePossibilites.charAt(k));
-                            unePossibilite.append(listePossibilites.charAt(m));
-                            //toutesLesPossibilites.add(unePossibilite.toString());
+                            unePossibilite.append(this.configuration.getListeValeursPossibles().charAt(i));
+                            unePossibilite.append(this.configuration.getListeValeursPossibles().charAt(j));
+                            unePossibilite.append(this.configuration.getListeValeursPossibles().charAt(k));
+                            unePossibilite.append(this.configuration.getListeValeursPossibles().charAt(m));
                             listeCandidats.add(unePossibilite.toString());
                             unePossibilite.setLength(0);
                         }
                     }
                 }
             }
-            //return toutesLesPossibilites.get((int)(Math.random()*toutesLesPossibilites.size()));
             return this.fournirCombinaisonDePoidsMinimum(listeCandidats);
         }
         else {
             reponseAsplitter = saisieUtilisateur.split("-");
             scoreReponse = Integer.valueOf(reponseAsplitter[0])*10 + Integer.valueOf(reponseAsplitter[1]);
-            //System.out.println("Donc le score de cette combinaison est " + scoreReponse + ", OK, on continue");
             // On parcourt la liste des candidats pour supprimer ceux dont le score est différent de celui de la réponse proposée précédemment
             ListIterator<String> parcoursListeCandidats = listeCandidats.listIterator();
             while (parcoursListeCandidats.hasNext()) {
                 String valeurCombinaisonCandidat = parcoursListeCandidats.next();
-                if (this.calculerScoreCombinaison(valeurCombinaisonCandidat, combinaisonEnCours) != scoreReponse) {
+                if (this.transformerTableauScoreEnEntier(calculerScoreCombinaison(valeurCombinaisonCandidat, combinaisonEnCours)) != scoreReponse) {
                     // Là, on supprime la proposition de la liste des candidats
                     parcoursListeCandidats.remove();
                 }
             }
             System.out.println("OK, on continue. Il me reste " + listeCandidats.size() + " combinaisons possibles");
-            // Puis on recommence le processus
             return this.fournirCombinaisonDePoidsMinimum(listeCandidats);
         }
     }
@@ -140,10 +119,9 @@ public class Mastermind extends Jeu {
      * @return Le poids maximum qui a été calculé, donc le nombre maximum de combinaisons de la liste ayant un score X par rapport à la combinaison fournie en entrée
      */
     private int calculerMaxPoidsCombinaison (String combinaisonEvaluee, List<String> listeCandidatsAtt) {
-        int poids = 0;
         int maxPoids = 0;
         // On initialise de 0 à 10 fois la taille de la combinaison nominale, donc taille+1 !
-        int tableauDePoids[] = new int[10*this.configuration.getTailleCombinaison() + 1];
+        int[] tableauDePoids = new int[10*this.configuration.getTailleCombinaison() + 1];
         //on initialise le tableau de poids pour la combinaison en cours d'évaluation, la dernière case correspond au score maximum
         for (int i=0; i<=10*this.configuration.getTailleCombinaison(); i++) {
             tableauDePoids[i] = 0;
@@ -153,7 +131,7 @@ public class Mastermind extends Jeu {
         ListIterator<String> parcoursListePossibilites = listeCandidatsAtt.listIterator();
         while (parcoursListePossibilites.hasNext()) {
             String valeurCombinaison = parcoursListePossibilites.next();
-            tableauDePoids[calculerScoreCombinaison(valeurCombinaison, combinaisonEvaluee)] += 1;
+            tableauDePoids[transformerTableauScoreEnEntier(calculerScoreCombinaison(valeurCombinaison, combinaisonEvaluee))] += 1;
         }
         //Puis on parcourt le tableau pour identifier le poids maximum obtenu sur un des scores
         for (int i=0; i<=10*this.configuration.getTailleCombinaison(); i++) {
@@ -172,11 +150,12 @@ public class Mastermind extends Jeu {
      * @param combinaisonCible combinaison de référence par rapport à laquelle la combinaison fournie sera scorée
      * @return le score calculé
      */
-    private int calculerScoreCombinaison (String combinaisonFournie, String combinaisonCible) {
+    private int[] calculerScoreCombinaison (String combinaisonFournie, String combinaisonCible) {
         int bienPlaces = 0;
         int presents = 0;
         int emplacement;
         boolean dejaComptabilise;
+        int[] reponse = new int[2];
         int[] tableauDeVerificationFournie = new int[combinaisonFournie.length()];
         int[] tableauDeVerificationCible = new int[combinaisonFournie.length()];
         for (int i = 0; i < combinaisonFournie.length(); i++) {
@@ -199,6 +178,17 @@ public class Mastermind extends Jeu {
             }
 
         }
-        return 10 * bienPlaces + presents;
+        reponse[0] = bienPlaces;
+        reponse[1] = presents;
+        return reponse;
+    }
+
+    /**
+     * Méthode qui renvoie le score à partir d'un tabluea des couleurs bien placées et présentes
+     * @param tableauScore tableau de score où l'élément de la colonne 0 correspond aux couleurs bien placées et colonne 1 aux couleurs présentes mal placées
+     * @return le score en entier
+     */
+    private int transformerTableauScoreEnEntier(int[] tableauScore) {
+        return 10 * tableauScore[0] + tableauScore[1];
     }
 }

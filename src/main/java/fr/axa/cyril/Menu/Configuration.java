@@ -1,4 +1,7 @@
 package fr.axa.cyril.Menu;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 public class Configuration {
     private String nom;
@@ -6,31 +9,55 @@ public class Configuration {
     private int tailleCombinaison;
     private int maxEssais;
     private boolean modeDebug;
+    private String listeValeursPossibles;
     private int nombreCouleurs;
 
     public Configuration() {
-
     }
 
-    public Configuration(String nom, String description, int tailleCombinaison, int maxEssais, boolean modeDebug, int nombreCouleurs) {
-        this.nom = nom;
-        this.description = description;
-        this.tailleCombinaison = tailleCombinaison;
-        this.maxEssais = maxEssais;
-        this.modeDebug = modeDebug;
-        this.nombreCouleurs = nombreCouleurs;
+    public void initConfiguration(String cheminFichierProperties, String jeu) {
+        InputStream input;
+        Properties proprietes = new Properties();
+        try {
+            input = Configuration.class.getResourceAsStream(cheminFichierProperties);
+            proprietes.load(input);
+            this.initUneConfiguration(jeu, proprietes);
+            input.close();
+        } catch (IOException e) {
+            System.out.println("Impossible de charger le fichier " + cheminFichierProperties);
+        }
     }
 
-    public String getNom() {
-        return nom;
+    private void initUneConfiguration(String jeu, Properties proprietes) {
+        try {
+            if (jeu.equals("mastermind"))
+            {
+                this.nom = "Mastermind";
+                this.nombreCouleurs = Integer.valueOf(proprietes.getProperty(jeu + ".nombreCouleurs"));
+            }
+            else {
+                this.nom = "Recherche +/-";
+            }
+            this.tailleCombinaison = Integer.valueOf(proprietes.getProperty(jeu + ".tailleCombinaison"));
+            this.maxEssais = Integer.valueOf(proprietes.getProperty(jeu + ".maxEssais"));
+            this.modeDebug = Boolean.valueOf(proprietes.getProperty(jeu + ".modeDebug"));
+            this.listeValeursPossibles = proprietes.getProperty(jeu + ".listeValeursPossibles");
+            this.description = proprietes.getProperty(jeu + ".description");
+        } catch (Exception e) {
+            System.out.println("Une information nécessaire au lancement du jeu " + jeu + " est manquante dans le fichier config.properties");
+        }
     }
 
-    public String getDescription() {
-        return description;
-    }
+    public String getNom() { return nom; }
+
+    public String getDescription() { return description; }
 
     public int getTailleCombinaison() {
         return tailleCombinaison;
+    }
+
+    public String getListeValeursPossibles() {
+        return listeValeursPossibles;
     }
 
     public int getMaxEssais() {

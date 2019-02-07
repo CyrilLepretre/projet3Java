@@ -6,17 +6,16 @@ public class RecherchePlusMoins extends Jeu {
     private int borneInf;
     private int borneSup;
 
-    public RecherchePlusMoins(Configuration configuration, String listePossibilites) {
-        super(configuration, listePossibilites);
-        // Borne sup à revoir en externalisant liste propositions dans nouveau fichier de config
-        borneInf = 0;
-        borneSup = 9;
+    public RecherchePlusMoins(Configuration configuration) {
+        super(configuration);
+        borneInf = Character.getNumericValue(this.configuration.getListeValeursPossibles().charAt(0));
+        borneSup = Character.getNumericValue(this.configuration.getListeValeursPossibles().charAt(this.configuration.getListeValeursPossibles().length() - 1));
     }
 
-    public boolean verifierCombinaison(String saisieUtilisateur, String combinaisonAtrouver) {
+    public boolean verifierCombinaison(String saisieUtilisateur, String combinaisonAtrouver, int nombreEssaisRestants) {
         StringBuilder resultat = new StringBuilder(this.configuration.getTailleCombinaison());
         if (saisieUtilisateur.equals(combinaisonAtrouver)) {
-            System.out.println("Vous avez gagné !");
+            System.out.println("Félicitations, vous avez gagné en " + nombreEssaisRestants + " essais");
             return true;
         }
         else {
