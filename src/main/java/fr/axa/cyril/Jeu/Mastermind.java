@@ -7,7 +7,7 @@ import java.util.ListIterator;
 
 public class Mastermind extends Jeu {
 
-    private List<String> toutesLesPossibilites;
+    //private List<String> toutesLesPossibilites;
     private List<String> listeCandidats;
 
     public Mastermind(Configuration configuration, String listePossibilites) {
@@ -67,7 +67,7 @@ public class Mastermind extends Jeu {
         if (combinaisonEnCours.equals("")) {
             //On va initialiser toutesPossibilites lors du premier tour de recherche
             //Au départ, la liste des candidats est toute la liste des possibilités, qu'on réduira ensuite à chaque itération
-            toutesLesPossibilites = new ArrayList<String>();
+            //toutesLesPossibilites = new ArrayList<String>();
             listeCandidats = new ArrayList<String>();
             for (int i = 0; i < configuration.getNombreCouleurs(); i++) {
                 for (int j = 0; j < configuration.getNombreCouleurs(); j++) {
@@ -78,7 +78,7 @@ public class Mastermind extends Jeu {
                             unePossibilite.append(listePossibilites.charAt(j));
                             unePossibilite.append(listePossibilites.charAt(k));
                             unePossibilite.append(listePossibilites.charAt(m));
-                            toutesLesPossibilites.add(unePossibilite.toString());
+                            //toutesLesPossibilites.add(unePossibilite.toString());
                             listeCandidats.add(unePossibilite.toString());
                             unePossibilite.setLength(0);
                         }
@@ -107,14 +107,22 @@ public class Mastermind extends Jeu {
         }
     }
 
-    private String fournirCombinaisonDePoidsMinimum(List<String> listeCandidatsAtt) {
+    /**
+     * Cette méthode a pour seul but de déterminer parmi toutes les combinaisons candidates restantes celle qui permettra d'éliminer un maximum de possibilités
+     * Elle vise exclusivement à optimiser le délai d'identification du bon résultat, par rapport à de simples random
+     * Elle parcourt la liste des candidats restants et calcule le poids maximum pour chacun d'entre eux
+     * A chaque cycle, elle garde en mémoire celle ayant le poids maximum et retourne in fine la première combinaison ayant le poids maximum identifié
+     * @param listeCandidatsRestants liste de String représentant la liste des candidats restants
+     * @return combinaison de poids maximum qui sera proposé à l'utilisateur
+     */
+    private String fournirCombinaisonDePoidsMinimum(List<String> listeCandidatsRestants) {
         int poidsMinimum=9999;
         int maxPoidsCombinaison;
         String combinaisonDePoidsMinimum = "";
-        ListIterator<String> parcoursListePossibilites = listeCandidatsAtt.listIterator();
+        ListIterator<String> parcoursListePossibilites = listeCandidatsRestants.listIterator();
         while (parcoursListePossibilites.hasNext()) {
             String valeurCombinaison = parcoursListePossibilites.next();
-            maxPoidsCombinaison = this.calculerMaxPoidsCombinaison(valeurCombinaison, listeCandidatsAtt);
+            maxPoidsCombinaison = this.calculerMaxPoidsCombinaison(valeurCombinaison, listeCandidatsRestants);
             if (maxPoidsCombinaison < poidsMinimum) {
                 poidsMinimum = maxPoidsCombinaison;
                 combinaisonDePoidsMinimum = valeurCombinaison;
@@ -123,6 +131,14 @@ public class Mastermind extends Jeu {
         return combinaisonDePoidsMinimum;
     }
 
+    /**
+     * Calcule le poids maximum d'une combinaison fournie en entrée par rapport à une liste de combinaisons
+     * Le poids pour un score donné correspond à la quantité des autres combinaisons de la liste ayant ce score suite à comparaison avec la combinaison en entrée
+     * Le poids maximum correspond au maximum de combinaisons de la liste ayant eu un score donné suite à la comporaison
+     * @param combinaisonEvaluee Combinaison à évaluer en terme de poids
+     * @param listeCandidatsAtt Liste des candidats restants
+     * @return Le poids maximum qui a été calculé, donc le nombre maximum de combinaisons de la liste ayant un score X par rapport à la combinaison fournie en entrée
+     */
     private int calculerMaxPoidsCombinaison (String combinaisonEvaluee, List<String> listeCandidatsAtt) {
         int poids = 0;
         int maxPoids = 0;
@@ -148,6 +164,14 @@ public class Mastermind extends Jeu {
         return maxPoids;
     }
 
+    /**
+     * La méthode calculerScoreCombinaison compare 2 combinaisons et détermine le score de la combinaison fournie
+     * Toute couleur bien placée génère 10 points, et toute couleur présente 1 point
+     *
+     * @param combinaisonFournie combinaison à scorer
+     * @param combinaisonCible combinaison de référence par rapport à laquelle la combinaison fournie sera scorée
+     * @return le score calculé
+     */
     private int calculerScoreCombinaison (String combinaisonFournie, String combinaisonCible) {
         int bienPlaces = 0;
         int presents = 0;
