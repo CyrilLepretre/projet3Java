@@ -12,7 +12,6 @@ class MastermindTest {
 
     @BeforeEach
     public void init(){
-        liste = "RVBJMNGCOP";
         conf = new Configuration();
     }
 

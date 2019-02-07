@@ -2,11 +2,8 @@ package fr.axa.cyril.Menu;
 
 import fr.axa.cyril.Jeu.Mastermind;
 import fr.axa.cyril.Jeu.RecherchePlusMoins;
-/*import org.jdom2.Document;
-import org.jdom2.Element;
-import org.jdom2.input.SAXBuilder;
-import java.util.Iterator;
-import java.util.List;*/
+
+import java.awt.event.KeyEvent;
 import java.util.Scanner;
 import java.io.File;
 
@@ -55,7 +52,10 @@ public class Menu {
                 break;
             case 2 :
                 System.out.println("******** Défenseur ********");
-                System.out.println("Choisissez une combinaison, vous l'avez ? Retenez-la, le jeu démarre");
+                // Améliorer avec un substring de getlisteValeursPossibles, et augmenter la liste dans config.properties
+                System.out.println("Choisissez une combinaison de " + mastermindConf.getTailleCombinaison() + " couleurs parmi " + mastermindConf.getListeValeursPossibles() + ", vous l'avez ? Retenez-la, le jeu démarre");
+                System.out.println();
+                // System.out.println("Appuyez sur la touche <Entrée>");
                 break;
             case 3 :
                 System.out.println("******** Duel ********");
