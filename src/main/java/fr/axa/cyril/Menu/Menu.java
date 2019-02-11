@@ -2,8 +2,6 @@ package fr.axa.cyril.Menu;
 
 import fr.axa.cyril.Jeu.Mastermind;
 import fr.axa.cyril.Jeu.RecherchePlusMoins;
-
-import java.awt.event.KeyEvent;
 import java.util.Scanner;
 import java.io.File;
 

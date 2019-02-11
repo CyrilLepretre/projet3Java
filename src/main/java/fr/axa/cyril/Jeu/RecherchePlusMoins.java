@@ -39,8 +39,8 @@ public class RecherchePlusMoins extends Jeu {
      * On utilise ici la recherche dichotomique.
      * La première proposition est toujours la même (555...). Puis en fonction des réponses de l'utilisateur, on calcule la moyenne
      * entre les bornes supérieure et inférieure, avant de décaler ces mêmes bornes pour le prochain coup
-     * @param combinaisonEnCours : combinaison en cours d'identification par l'ordinateur
-     * @param saisieUtilisateur : réponse fournie par l'utisateur pour indiquer des +/-/= pour chaque chiffre
+     * @param combinaisonEnCours combinaison en cours d'identification par l'ordinateur
+     * @param saisieUtilisateur réponse fournie par l'utisateur pour indiquer des +/-/= pour chaque chiffre
      * @return la chaine de chiffres calculée par l'ordinateur
      */
     public String proposerCombinaison(String combinaisonEnCours, String saisieUtilisateur) {

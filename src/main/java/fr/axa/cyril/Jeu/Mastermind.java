@@ -4,10 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+/**
+ * Jeu Mastermind
+ *
+ * @author Cyril Lepretre
+ * @version 1.0
+ */
 public class Mastermind extends Jeu {
+    /**
+     * La liste des candidats pour le mode défensif
+     */
     private ArrayList<String> listeCandidats;
+    /**
+     * Le score maximum qu'un combinaison peut obtenir
+     * Sachant qu'un pion bien placé rapporte 10 points, et 1 mal placé 1 point
+     */
     private int scoreMaximum;
 
+    /**
+     * Constructeur du jeu Mastermind
+     * @param configuration La configuration issue des informations fournies dans le config.properties
+     */
     public Mastermind(Configuration configuration) {
         super(configuration);
         this.scoreMaximum = 10 * this.configuration.getTailleCombinaison();
