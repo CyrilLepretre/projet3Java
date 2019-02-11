@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class Mastermind extends Jeu {
-    private List<String> listeCandidats;
+    private ArrayList<String> listeCandidats;
     private int scoreMaximum;
 
     public Mastermind(Configuration configuration) {
@@ -40,49 +40,57 @@ public class Mastermind extends Jeu {
      * Il s'avère être le plus adapté au problème posé dans le Mastermind, avec une solution trouvée en 5 essais maximum pour
      * le jeu classique 4 trous / 6 couleurs
      * Le concept part du fait que parmi toutes les propositions possibles, lorqu'on fait une proposition, et que notre adversaire nous indique le score obtenu (les pions bien placés/présents),
-     * la réponse figure forcément parmi les propositions non évaluées, et qui obtienne le même score par rapport à la proposition faite. On fonctionne donc par élimination.
+     * la réponse figure forcément parmi les propositions non évaluées, et qui obtienne le même score par rapport à la proposition faite. On fonctionne donc par élimination de celles qui ont un score différent.
      * On commence par initialiser la liste des candidats (ie toutes les possibilités au premier tour) qu'on réduira ensuite à chaque itération
+     *
+     * Exemple à 3 chiffres : La combinaison secrète est 123. L'algorithme propose 000. Le score est donc de 00 (O bien placés, 0 mal placés)
+     *     Par bijection, on peut donc en déduire que la combinaison secrète aura forcément un score de 00 par rapport à la dernière combinaison proposée 000
+     *     C'est pourquoi on supprime de la liste des candidats toutes les possibilités dont le score est différent de 00, car elles n'inclueront forcément pas la combinaison secrète
+     *
      * @param combinaisonEnCours combinaison de couleurs retournée par l'ordinateur
      * @param saisieUtilisateur réponse de l'utilisateur qui a indiqué les couleurs bien placées en présentes
      * @return nouvelle proposition après application de l'algorithme
      */
     public String proposerCombinaison(String combinaisonEnCours, String saisieUtilisateur) {
-        StringBuilder unePossibilite;
         String[] reponseAsplitter;
         int scoreReponse;
         if (combinaisonEnCours.equals("")) {
             listeCandidats = new ArrayList<>();
-            for (int i = 0; i < configuration.getNombreCouleurs(); i++) {
-                for (int j = 0; j < configuration.getNombreCouleurs(); j++) {
-                    for (int k = 0; k < configuration.getNombreCouleurs(); k++) {
-                        for (int m = 0; m < configuration.getNombreCouleurs(); m++) {
-                            unePossibilite = new StringBuilder(this.configuration.getTailleCombinaison());
-                            unePossibilite.append(this.configuration.getListeValeursPossibles().charAt(i));
-                            unePossibilite.append(this.configuration.getListeValeursPossibles().charAt(j));
-                            unePossibilite.append(this.configuration.getListeValeursPossibles().charAt(k));
-                            unePossibilite.append(this.configuration.getListeValeursPossibles().charAt(m));
-                            listeCandidats.add(unePossibilite.toString());
-                            unePossibilite.setLength(0);
-                        }
-                    }
-                }
-            }
+            construireListeInitialeRec(configuration.getTailleCombinaison(), configuration.getNombreCouleurs(), configuration.getListeValeursPossibles(), "", listeCandidats);
             return this.fournirCombinaisonDePoidsMinimum(listeCandidats);
         }
         else {
             reponseAsplitter = saisieUtilisateur.split("-");
             scoreReponse = Integer.valueOf(reponseAsplitter[0])*10 + Integer.valueOf(reponseAsplitter[1]);
-            // On parcourt la liste des candidats pour supprimer ceux dont le score est différent de celui de la réponse proposée précédemment
             ListIterator<String> parcoursListeCandidats = listeCandidats.listIterator();
             while (parcoursListeCandidats.hasNext()) {
                 String valeurCombinaisonCandidat = parcoursListeCandidats.next();
                 if (this.transformerTableauScoreEnEntier(calculerScoreCombinaison(valeurCombinaisonCandidat, combinaisonEnCours)) != scoreReponse) {
-                    // Là, on supprime la proposition de la liste des candidats
                     parcoursListeCandidats.remove();
                 }
             }
             System.out.println("OK, on continue. Il me reste " + listeCandidats.size() + " combinaisons possibles");
             return this.fournirCombinaisonDePoidsMinimum(listeCandidats);
+        }
+    }
+
+    /**
+     * Méthode récursive de génération de la liste liste initiale de possibilités.
+     * Elle permet de générer la liste de possibilités initiale quel que soit la taille des combinaisons
+     * @param indexCombinaison taille de la combinaion, décrémentée à chaque appel récursif jusqu'à avoir une taille de 1, qui correspond à l'étape de fin où l'on ajoute une combinaison à la liste
+     * @param nombreCouleurs nombre de couleurs utilisables
+     * @param listeCouleurs chaine de caractères représentant les couleurs utilisables (1 caractère = 1 couleur)
+     * @param debutCombinaison début de combinaison générée par les précédents appels, et dont la taille augmente de 1 à chaque appel récursif, et utilisé lors de l'étape finale
+     * @param listeCandidatsRec liste des candidats construits lors des derniers appels
+     */
+    private void construireListeInitialeRec(int indexCombinaison, int nombreCouleurs, String listeCouleurs, String debutCombinaison, ArrayList<String> listeCandidatsRec) {
+        for (int i=0; i<nombreCouleurs; i++) {
+            if (indexCombinaison == 1) {
+                listeCandidatsRec.add(debutCombinaison + listeCouleurs.charAt(i));
+            }
+            else {
+                construireListeInitialeRec(indexCombinaison - 1, nombreCouleurs, listeCouleurs, debutCombinaison + listeCouleurs.charAt(i), listeCandidatsRec);
+            }
         }
     }
 
