@@ -41,15 +41,21 @@ public class Mastermind extends Jeu {
      * @return true si la combinaison a été trouvée, false sinon
      */
     public boolean verifierCombinaison(String saisieUtilisateur, String combinaisonAtrouver, int nombreEssaisRestants) {
+        this.nombreEssaisRestants --;
         int[] tableauScoreObtenu = this.calculerScoreCombinaison(saisieUtilisateur, combinaisonAtrouver);
         if (transformerTableauScoreEnEntier(tableauScoreObtenu) == scoreMaximum) {
-            System.out.println("Félicitations, vous avez gagné en " + (this.configuration.getMaxEssais() - nombreEssaisRestants) + " essai(s)");
+            //System.out.println("Félicitations, vous avez gagné en " + (this.configuration.getMaxEssais() - nombreEssaisRestants) + " essai(s)");
             return true;
         }
-        else {
+        /*else {
             System.out.println("Proposition : " + saisieUtilisateur + " -> Réponse : " + tableauScoreObtenu[0] + " bien placé(s), " + tableauScoreObtenu[1] + " présent(s)");
-        }
+        }*/
         return false;
+    }
+
+    public String calculerReponseCombinaison(String saisieUtilisateur, String combinaisonAtrouver) {
+        int[] tableauScoreObtenu = this.calculerScoreCombinaison(saisieUtilisateur, combinaisonAtrouver);
+        return (tableauScoreObtenu[0] + " bien placé(s), " + tableauScoreObtenu[1] + " présent(s)");
     }
 
     /**
@@ -215,5 +221,17 @@ public class Mastermind extends Jeu {
      */
     private int transformerTableauScoreEnEntier(int[] tableauScore) {
         return 10 * tableauScore[0] + tableauScore[1];
+    }
+
+    public boolean determinerSiFinJeu(String reponseEvalutionUtilisateur) {
+        this.nombreEssaisRestants --;
+        String[] reponseASplitter = reponseEvalutionUtilisateur.split("-");
+        if (Integer.valueOf(reponseASplitter[0]) == this.configuration.getTailleCombinaison()) {
+            jeuFini= true;
+        }
+        else {
+            jeuFini = false;
+        }
+        return jeuFini;
     }
 }

@@ -13,13 +13,15 @@ public class RecherchePlusMoins extends Jeu {
     }
 
     public boolean verifierCombinaison(String saisieUtilisateur, String combinaisonAtrouver, int nombreEssaisRestants) {
-        StringBuilder resultat = new StringBuilder(this.configuration.getTailleCombinaison());
+        //StringBuilder resultat = new StringBuilder(this.configuration.getTailleCombinaison());
+        this.nombreEssaisRestants --;
         if (saisieUtilisateur.equals(combinaisonAtrouver)) {
-            System.out.println("Félicitations, vous avez gagné en " + nombreEssaisRestants + " essais");
+            //System.out.println("Félicitations, vous avez gagné en " + nombreEssaisRestants + " essais");
+            this.jeuFini = true;
             return true;
         }
         else {
-            for (int i=0; i<saisieUtilisateur.length(); i++) {
+            /*for (int i=0; i<saisieUtilisateur.length(); i++) {
                 if (Character.getNumericValue(saisieUtilisateur.charAt(i)) == Character.getNumericValue(combinaisonAtrouver.charAt(i))) {
                     resultat.append('=');
                 }
@@ -30,9 +32,26 @@ public class RecherchePlusMoins extends Jeu {
                     resultat.append('+');
                 }
             }
-            System.out.println("Proposition : "+saisieUtilisateur+" -> Réponse : "+resultat);
+            System.out.println("Proposition : "+saisieUtilisateur+" -> Réponse : "+resultat);*/
             return false;
         }
+    }
+
+    public String calculerReponseCombinaison(String saisieUtilisateur, String combinaisonAtrouver) {
+        StringBuilder resultat = new StringBuilder(this.configuration.getTailleCombinaison());
+        for (int i=0; i<saisieUtilisateur.length(); i++) {
+            if (Character.getNumericValue(saisieUtilisateur.charAt(i)) == Character.getNumericValue(combinaisonAtrouver.charAt(i))) {
+                resultat.append('=');
+            }
+            else if (Character.getNumericValue(saisieUtilisateur.charAt(i)) > Character.getNumericValue(combinaisonAtrouver.charAt(i))) {
+                resultat.append('-');
+            }
+            else {
+                resultat.append('+');
+            }
+        }
+        //System.out.println("Proposition : "+saisieUtilisateur+" -> Réponse : "+resultat);
+        return resultat.toString();
     }
 
     /**
@@ -71,5 +90,16 @@ public class RecherchePlusMoins extends Jeu {
             }
         }
         return proposition.toString();
+    }
+
+    public boolean determinerSiFinJeu(String reponseEvalutionUtilisateur) {
+        this.nombreEssaisRestants --;
+        jeuFini = true;
+        for (int i = 0; i < reponseEvalutionUtilisateur.length(); i++) {
+            if (!Character.valueOf(reponseEvalutionUtilisateur.charAt(i)).equals('=')) {
+                jeuFini = false;
+            }
+        }
+        return jeuFini;
     }
 }

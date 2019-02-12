@@ -16,6 +16,8 @@ public abstract class Jeu {
      * Configuration du jeu
      */
     protected Configuration configuration;
+    protected int nombreEssaisRestants;
+    protected boolean jeuFini;
     //protected String listePossibilites;
 
     /**
@@ -24,7 +26,21 @@ public abstract class Jeu {
      */
     protected Jeu (Configuration configuration) {
         this.configuration = configuration;
+        this.jeuFini = false;
+        this.nombreEssaisRestants = configuration.getMaxEssais();
         //this.listePossibilites = listePossibilites;
+    }
+
+    public boolean getJeuFini() {
+        return jeuFini;
+    }
+
+    public int getNombreEssaisRestants() {
+        return nombreEssaisRestants;
+    }
+
+    public Configuration getConfiguration() {
+        return configuration;
     }
 
     /**
@@ -32,7 +48,7 @@ public abstract class Jeu {
      * @param tailleCombinaison La longueur de la combinaison à générer
      * @return La combinaison
      */
-    private String genererCombinaison(int tailleCombinaison) {
+    public String genererCombinaison(int tailleCombinaison) {
         StringBuilder combinaison = new StringBuilder(tailleCombinaison);
         for (int i=0; i<tailleCombinaison; i++) {
             combinaison.append(this.configuration.getListeValeursPossibles().charAt(this.genererChiffreRandom(tailleCombinaison)));
@@ -57,15 +73,28 @@ public abstract class Jeu {
 
     /**
      * Lancement d'un jeu (Mastermind ou recherche +/-)
+     * Initialise le nombre d'essais
      * @param mode : mode de jeu lancé (1=challenger, 2=défenseur, 3=duel)
      */
-    public void demarrer(int mode) {
-        int nombreEssaisRestants = configuration.getMaxEssais();
+
+    /*public void initialiser(int mode) {
+        nombreEssaisRestants = configuration.getMaxEssais();
+        jeuFini = false;
+    }*/
+  /*  public void demarrer(int mode) {
+        nombreEssaisRestants = configuration.getMaxEssais();
         Scanner scanner;
         String saisieUtilisateur;
         String valeursOK;
         String valeursKO;
         boolean jeuFini = false;
+        if (mode == 1) {
+            String combinaisonAtrouver = this.genererCombinaison(this.configuration.getTailleCombinaison());
+        }
+
+
+
+
         if (mode == 1) {
             String combinaisonAtrouver = this.genererCombinaison(this.configuration.getTailleCombinaison());
             if (this.configuration.getModeDebug()) {
@@ -100,7 +129,6 @@ public abstract class Jeu {
                         valeursKO = scanner.nextLine();
                         saisieUtilisateur = valeursOK + "-" + valeursKO;
                     }
-
                 }
                 else {
                     saisieUtilisateur = null;
@@ -109,7 +137,7 @@ public abstract class Jeu {
                 System.out.println("Voici ma proposition : " + combinaisonEnCours + "   [" + nombreEssaisRestants + " essai(s) restant(s)]");
             }
         }
-    }
+    }*/
 
     /**
      * Méthode abstraite de vérification de combinaison
@@ -118,7 +146,7 @@ public abstract class Jeu {
      * @param nombreEssaisRestants Le nombre d'essais restants
      * @return true ou false pour indiquer si la combinaison fournie est celle attendue
      */
-    abstract boolean verifierCombinaison(String saisieUtilisateur, String combinaisonAtrouver, int nombreEssaisRestants);
+    public abstract boolean verifierCombinaison(String saisieUtilisateur, String combinaisonAtrouver, int nombreEssaisRestants);
 
     /**
      * Méthode abstraite de proposition de combinaison
@@ -126,5 +154,16 @@ public abstract class Jeu {
      * @param saisieUtilisateur La réponse qu'a apporté l'utilisateur suite à la dernière combinaison proposée, qui est l'autre paramètre
      * @return Une nouvelle proposition
      */
-    abstract String proposerCombinaison(String combinaisonEnCours, String saisieUtilisateur);
+    public abstract String proposerCombinaison(String combinaisonEnCours, String saisieUtilisateur);
+
+    /**
+     *
+     * @param saisieUtilisateur
+     * @param combinaisonAtrouver
+     * @return
+     */
+    public abstract String calculerReponseCombinaison(String saisieUtilisateur, String combinaisonAtrouver);
+
+    public abstract boolean determinerSiFinJeu(String reponseEvalutionUtilisateur);
+
 }
