@@ -13,26 +13,12 @@ public class RecherchePlusMoins extends Jeu {
     }
 
     public boolean verifierCombinaison(String saisieUtilisateur, String combinaisonAtrouver, int nombreEssaisRestants) {
-        //StringBuilder resultat = new StringBuilder(this.configuration.getTailleCombinaison());
         this.nombreEssaisRestants --;
         if (saisieUtilisateur.equals(combinaisonAtrouver)) {
-            //System.out.println("Félicitations, vous avez gagné en " + nombreEssaisRestants + " essais");
             this.jeuFini = true;
             return true;
         }
         else {
-            /*for (int i=0; i<saisieUtilisateur.length(); i++) {
-                if (Character.getNumericValue(saisieUtilisateur.charAt(i)) == Character.getNumericValue(combinaisonAtrouver.charAt(i))) {
-                    resultat.append('=');
-                }
-                else if (Character.getNumericValue(saisieUtilisateur.charAt(i)) > Character.getNumericValue(combinaisonAtrouver.charAt(i))) {
-                    resultat.append('-');
-                }
-                else {
-                    resultat.append('+');
-                }
-            }
-            System.out.println("Proposition : "+saisieUtilisateur+" -> Réponse : "+resultat);*/
             return false;
         }
     }
@@ -50,7 +36,6 @@ public class RecherchePlusMoins extends Jeu {
                 resultat.append('+');
             }
         }
-        //System.out.println("Proposition : "+saisieUtilisateur+" -> Réponse : "+resultat);
         return resultat.toString();
     }
 

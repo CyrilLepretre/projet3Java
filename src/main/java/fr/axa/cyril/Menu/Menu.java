@@ -1,9 +1,7 @@
 package fr.axa.cyril.Menu;
 
-import fr.axa.cyril.Interface.InterfaceMastermind;
-import fr.axa.cyril.Jeu.Mastermind;
-import fr.axa.cyril.Jeu.RecherchePlusMoins;
-import fr.axa.cyril.Interface.InterfaceRecherchePlusMoins;
+import fr.axa.cyril.Interface.InterfaceJeu;
+
 import java.util.Scanner;
 import java.io.File;
 
@@ -47,38 +45,15 @@ public class Menu {
         System.out.println("Quel mode choisissez-vous ?");
         int modeChoisi = saisie.nextInt();
         if (jeuChoisi == 1) {
-            InterfaceMastermind interfaceMastermind = new InterfaceMastermind();
-            interfaceMastermind.lancerJeu(modeChoisi, mastermindConf);
+            InterfaceJeu interfaceMastermind = new InterfaceJeu();
+            interfaceMastermind.lancerJeu(jeuChoisi, modeChoisi, mastermindConf);
             this.affichageMenuSuivant(jeuChoisi, modeChoisi);
         }
         else {
-            InterfaceRecherchePlusMoins interfaceRecherchePlusMoins = new InterfaceRecherchePlusMoins();
-            interfaceRecherchePlusMoins.lancerJeu(modeChoisi, recherchePlusMoinsConf);
+            InterfaceJeu interfaceRecherchePlusMoins = new InterfaceJeu();
+            interfaceRecherchePlusMoins.lancerJeu(jeuChoisi, modeChoisi, recherchePlusMoinsConf);
             this.affichageMenuSuivant(jeuChoisi, modeChoisi);
         }
-
-        /*switch (modeChoisi) {
-            case 1 :
-                System.out.println("******** Challenger ********");
-                break;
-            case 2 :
-                System.out.println("******** Défenseur ********");
-                // Améliorer avec un substring de getlisteValeursPossibles, et augmenter la liste dans config.properties
-                System.out.println("Choisissez une combinaison de " + mastermindConf.getTailleCombinaison() + " couleurs parmi " + mastermindConf.getListeValeursPossibles() + ", vous l'avez ? Retenez-la, le jeu démarre");
-                System.out.println();
-                break;
-            case 3 :
-                System.out.println("******** Duel ********");
-                break;
-        }
-        if (jeuChoisi == 1) {
-            Mastermind mastermind = new Mastermind(mastermindConf);
-            mastermind.demarrer(modeChoisi);
-        }
-        else {
-            RecherchePlusMoins recherchePlusMoins = new RecherchePlusMoins(recherchePlusMoinsConf);
-            recherchePlusMoins.demarrer(modeChoisi);
-        }*/
     }
 
     private void affichageMenuSuivant(int jeuPrecedent, int modePrecedent) {
@@ -91,12 +66,12 @@ public class Menu {
         int choix = saisie.nextInt();
         if (choix == 1) {
             if (jeuPrecedent == 2) {
-                InterfaceRecherchePlusMoins interfaceRecherchePlusMoins = new InterfaceRecherchePlusMoins();
-                interfaceRecherchePlusMoins.lancerJeu(modePrecedent, recherchePlusMoinsConf);
+                InterfaceJeu interfaceRecherchePlusMoins = new InterfaceJeu();
+                interfaceRecherchePlusMoins.lancerJeu(2, modePrecedent, recherchePlusMoinsConf);
             }
             else {
-                InterfaceMastermind interfaceMastermind = new InterfaceMastermind();
-                interfaceMastermind.lancerJeu(modePrecedent, mastermindConf);
+                InterfaceJeu interfaceMastermind = new InterfaceJeu();
+                interfaceMastermind.lancerJeu(1, modePrecedent, mastermindConf);
             }
         }
         else if (choix == 2) {

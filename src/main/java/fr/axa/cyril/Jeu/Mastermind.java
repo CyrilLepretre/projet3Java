@@ -36,23 +36,26 @@ public class Mastermind extends Jeu {
      * - 1 fois pour regarder chaque couleur restante dans la combinaison de l'utilisateur et vérifier si celle-ci est présente dans la solution, et la laisser de côté le cas échéant
      * L'objectif est de ne pas revérifier une couleur déjà vérifiée
      *
-     * @param saisieUtilisateur   : chaine de caractères saisie par l'utilsateur
-     * @param combinaisonAtrouver : chaine de caractères générée à trouver
+     * @param saisieUtilisateur La chaine de caractères saisie par l'utilsateur
+     * @param combinaisonAtrouver La chaine de caractères générée à trouver
      * @return true si la combinaison a été trouvée, false sinon
      */
     public boolean verifierCombinaison(String saisieUtilisateur, String combinaisonAtrouver, int nombreEssaisRestants) {
         this.nombreEssaisRestants --;
         int[] tableauScoreObtenu = this.calculerScoreCombinaison(saisieUtilisateur, combinaisonAtrouver);
         if (transformerTableauScoreEnEntier(tableauScoreObtenu) == scoreMaximum) {
-            //System.out.println("Félicitations, vous avez gagné en " + (this.configuration.getMaxEssais() - nombreEssaisRestants) + " essai(s)");
             return true;
         }
-        /*else {
-            System.out.println("Proposition : " + saisieUtilisateur + " -> Réponse : " + tableauScoreObtenu[0] + " bien placé(s), " + tableauScoreObtenu[1] + " présent(s)");
-        }*/
         return false;
     }
 
+    /**
+     * Méthode permettant de retourner le score d'une combinaison fournie par l'utilisateur
+     * Elle s'appuie sur la méthode calculerReponseCombinaison pour récupérer le tableau des couleurs bien/mal placées
+     * @param saisieUtilisateur La combinaison fournie par l'utilisateur
+     * @param combinaisonAtrouver La combinaison secrète à trouver
+     * @return La réponse sous forme de chaine de caractères qui sera à afficher à l'écran
+     */
     public String calculerReponseCombinaison(String saisieUtilisateur, String combinaisonAtrouver) {
         int[] tableauScoreObtenu = this.calculerScoreCombinaison(saisieUtilisateur, combinaisonAtrouver);
         return (tableauScoreObtenu[0] + " bien placé(s), " + tableauScoreObtenu[1] + " présent(s)");
@@ -223,6 +226,11 @@ public class Mastermind extends Jeu {
         return 10 * tableauScore[0] + tableauScore[1];
     }
 
+    /**
+     * Détermine si le jeu est terminé
+     * @param reponseEvalutionUtilisateur
+     * @return
+     */
     public boolean determinerSiFinJeu(String reponseEvalutionUtilisateur) {
         this.nombreEssaisRestants --;
         String[] reponseASplitter = reponseEvalutionUtilisateur.split("-");

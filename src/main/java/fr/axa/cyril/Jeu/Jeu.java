@@ -1,7 +1,6 @@
 package fr.axa.cyril.Jeu;
 
 import fr.axa.cyril.Menu.Configuration;
-import java.util.Scanner;
 
 /**
  * Classe abstraite pour un jeu
@@ -18,7 +17,6 @@ public abstract class Jeu {
     protected Configuration configuration;
     protected int nombreEssaisRestants;
     protected boolean jeuFini;
-    //protected String listePossibilites;
 
     /**
      * Constructeur de jeu
@@ -28,7 +26,6 @@ public abstract class Jeu {
         this.configuration = configuration;
         this.jeuFini = false;
         this.nombreEssaisRestants = configuration.getMaxEssais();
-        //this.listePossibilites = listePossibilites;
     }
 
     public boolean getJeuFini() {
@@ -70,74 +67,6 @@ public abstract class Jeu {
             return (int)(Math.random()*borneSup) + 1;
         }
     }
-
-    /**
-     * Lancement d'un jeu (Mastermind ou recherche +/-)
-     * Initialise le nombre d'essais
-     * @param mode : mode de jeu lancé (1=challenger, 2=défenseur, 3=duel)
-     */
-
-    /*public void initialiser(int mode) {
-        nombreEssaisRestants = configuration.getMaxEssais();
-        jeuFini = false;
-    }*/
-  /*  public void demarrer(int mode) {
-        nombreEssaisRestants = configuration.getMaxEssais();
-        Scanner scanner;
-        String saisieUtilisateur;
-        String valeursOK;
-        String valeursKO;
-        boolean jeuFini = false;
-        if (mode == 1) {
-            String combinaisonAtrouver = this.genererCombinaison(this.configuration.getTailleCombinaison());
-        }
-
-
-
-
-        if (mode == 1) {
-            String combinaisonAtrouver = this.genererCombinaison(this.configuration.getTailleCombinaison());
-            if (this.configuration.getModeDebug()) {
-                System.out.println("## MODE DEBUG ===> Combinaison : "+combinaisonAtrouver);
-            }
-            while ((nombreEssaisRestants > 0)&&(!jeuFini)) {
-                nombreEssaisRestants--;
-                System.out.println("Indiquez votre proposition de "+configuration.getTailleCombinaison()+" caractères parmi "+ this.configuration.getListeValeursPossibles() + " [il vous reste "+nombreEssaisRestants+" essai(s)]");
-                scanner = new Scanner(System.in);
-                saisieUtilisateur = scanner.nextLine();
-                jeuFini = this.verifierCombinaison(saisieUtilisateur, combinaisonAtrouver, nombreEssaisRestants);
-            }
-            if (!jeuFini) {
-                System.out.println("\n************************Dommage, vous avez perdu ! La réponse était "+combinaisonAtrouver);
-            }
-        }
-        else if (mode == 2) {
-            String combinaisonEnCours= "";
-            while ((nombreEssaisRestants > 0)&&(!jeuFini)) {
-                nombreEssaisRestants--;
-                // Code à délocaliser dans les jeux concernés pour pas de code spécifique à un jeu ici
-                if (!(combinaisonEnCours.equals(""))) {
-                    if (this.getClass().getName().equals("RecherchePlusMoins")) {
-                        scanner = new Scanner(System.in);
-                        saisieUtilisateur = scanner.nextLine();
-                    }
-                    else {
-                        System.out.println("Combien de couleurs sont à la bonne place : ");
-                        scanner = new Scanner(System.in);
-                        valeursOK = scanner.nextLine();
-                        System.out.println("Combien de couleurs sont à la mauvaise place : ");
-                        valeursKO = scanner.nextLine();
-                        saisieUtilisateur = valeursOK + "-" + valeursKO;
-                    }
-                }
-                else {
-                    saisieUtilisateur = null;
-                }
-                combinaisonEnCours = this.proposerCombinaison(combinaisonEnCours,saisieUtilisateur);
-                System.out.println("Voici ma proposition : " + combinaisonEnCours + "   [" + nombreEssaisRestants + " essai(s) restant(s)]");
-            }
-        }
-    }*/
 
     /**
      * Méthode abstraite de vérification de combinaison

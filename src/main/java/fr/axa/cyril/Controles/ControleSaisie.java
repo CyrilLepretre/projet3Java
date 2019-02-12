@@ -41,7 +41,7 @@ public class ControleSaisie {
         return true;
     }
 
-    public boolean controlerSaisieUtilisateurPlusMoinsDefenseur(String saisieUtilisateur, int tailleAttendue, String listeValeursValides) {
+    private boolean controlerSaisieUtilisateurPlusMoinsDefenseur(String saisieUtilisateur, int tailleAttendue, String listeValeursValides) {
         if (saisieUtilisateur.length() != tailleAttendue) {
             return false;
         }
@@ -51,7 +51,7 @@ public class ControleSaisie {
         return true;
     }
 
-    public boolean controlerSaisieUtilisateurMenuJeu(String saisieUtilsateur, int tailleAttendue, String listeValeursValides) {
+    private boolean controlerSaisieUtilisateurMenuJeu(String saisieUtilsateur, int tailleAttendue, String listeValeursValides) {
         if (saisieUtilsateur.length() != tailleAttendue) {
             return false;
         }
@@ -65,7 +65,7 @@ public class ControleSaisie {
     }
 
 
-    public boolean controlerSaisieUtilisateurChiffres (String saisieUtilisateur, int tailleAttendue, String listeValeursValides) {
+    private boolean controlerSaisieUtilisateurChiffres (String saisieUtilisateur, int tailleAttendue, String listeValeursValides) {
         if (saisieUtilisateur.length() != tailleAttendue) {
             return false;
         }
