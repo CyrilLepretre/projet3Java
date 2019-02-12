@@ -58,7 +58,7 @@ public abstract class Jeu {
      * @param borneSup La borne supérieure limitant la valeur du chiffre généré
      * @return Le chiffre généré alétoirement
      */
-    private int genererChiffreRandom (int borneSup) {
+    public int genererChiffreRandom (int borneSup) {
         if (borneSup < 1) {
             System.out.println("Erreur de borne supérieure, qui doit être supérieure ou égale à 1");
             return 0;

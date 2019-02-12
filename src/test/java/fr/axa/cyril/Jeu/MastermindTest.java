@@ -13,18 +13,14 @@ class MastermindTest {
     @BeforeEach
     public void init(){
         conf = new Configuration();
+        conf.initConfiguration("/config.properties" , "mastermind");
     }
 
     @Test
     public void doNothing() {
     }
 
-    /*@Test
-    public void GivenRWhenGenererCombinaisonThenRetourne1() {
-        assertEquals(new Mastermind().genererCombinaison(1), "R");
-    }*/
-
-    /*@Test
+    @Test
     public void Given1EnBorneSupWhenChiffreRandomThenRetourne1() {
         assertEquals(new Mastermind(conf).genererChiffreRandom(1),1);
     }
@@ -44,5 +40,5 @@ class MastermindTest {
     public void GivenCombinaisonDe5WhenGenererCombinaisonThenRenvoieUneChaineDe5Char() {
         String listeGeneree = new Mastermind(conf).genererCombinaison(5);
         assertEquals(listeGeneree.length(),5);
-    }*/
+    }
 }

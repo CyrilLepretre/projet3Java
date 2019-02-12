@@ -34,14 +34,15 @@ public class Configuration {
             {
                 this.nom = "Mastermind";
                 this.nombreCouleurs = Integer.valueOf(proprietes.getProperty(jeu + ".nombreCouleurs"));
+                this.listeValeursPossibles = proprietes.getProperty(jeu + ".listeValeursPossibles").substring(0,this.nombreCouleurs);
             }
             else {
                 this.nom = "Recherche +/-";
+                this.listeValeursPossibles = proprietes.getProperty(jeu + ".listeValeursPossibles");
             }
             this.tailleCombinaison = Integer.valueOf(proprietes.getProperty(jeu + ".tailleCombinaison"));
             this.maxEssais = Integer.valueOf(proprietes.getProperty(jeu + ".maxEssais"));
             this.modeDebug = Boolean.valueOf(proprietes.getProperty(jeu + ".modeDebug"));
-            this.listeValeursPossibles = proprietes.getProperty(jeu + ".listeValeursPossibles");
             this.description = proprietes.getProperty(jeu + ".description");
         } catch (Exception e) {
             System.out.println("Une information nécessaire au lancement du jeu " + jeu + " est manquante dans le fichier config.properties");

@@ -5,7 +5,6 @@ import fr.axa.cyril.Jeu.Jeu;
 import fr.axa.cyril.Jeu.Mastermind;
 import fr.axa.cyril.Jeu.RecherchePlusMoins;
 import fr.axa.cyril.Menu.Configuration;
-
 import java.util.Scanner;
 
 public class InterfaceJeu {
@@ -40,7 +39,7 @@ public class InterfaceJeu {
         derniereReponseUtilisateur = "";
         jeuTermine = false;
         int numeroTour = 0;
-        while ((partieJeu1.getNombreEssaisRestants() > 0) && (!jeuTermine))//(!(recherchePlusMoins.getJeuFini())) && (!finModeDuel))
+        while ((partieJeu1.getNombreEssaisRestants() > 0) && (!jeuTermine))
         {
             switch (modeDeJeu) {
                 case 1 :
@@ -74,10 +73,10 @@ public class InterfaceJeu {
             scanner = new Scanner(System.in);
             saisieUtilisateur = scanner.nextLine();
             if ((this.jeuChoisi == 2)) {
-                saisieCorrecte = new ControleSaisie().controlerSaisieUtilisateur(saisieUtilisateur, "chiffres", jeu.getConfiguration().getTailleCombinaison(), jeu.getConfiguration().getListeValeursPossibles());
+                saisieCorrecte = new ControleSaisie().controlerSaisieUtilisateurGenerique(saisieUtilisateur, jeu.getConfiguration().getTailleCombinaison(), jeu.getConfiguration().getListeValeursPossibles());
             }
             else {
-                saisieCorrecte = new ControleSaisie().controlerSaisieUtilisateur(saisieUtilisateur, "caracteresMastermind", jeu.getConfiguration().getTailleCombinaison(), jeu.getConfiguration().getListeValeursPossibles());
+                saisieCorrecte = new ControleSaisie().controlerSaisieUtilisateurGenerique(saisieUtilisateur, jeu.getConfiguration().getTailleCombinaison(), jeu.getConfiguration().getListeValeursPossibles());
             }
             numeroSaisie++;
         }
@@ -104,7 +103,7 @@ public class InterfaceJeu {
                 scanner = new Scanner(System.in);
                 saisieUtilisateur = scanner.nextLine();
                 this.derniereReponseUtilisateur = saisieUtilisateur;
-                saisieCorrecte = new ControleSaisie().controlerSaisieUtilisateur(saisieUtilisateur, "reponseUtilisateurPlusMoinsDefenseur", jeu.getConfiguration().getTailleCombinaison(), "+-=");
+                saisieCorrecte = new ControleSaisie().controlerSaisieUtilisateurGenerique(saisieUtilisateur, jeu.getConfiguration().getTailleCombinaison(), "+-=");
                 numeroSaisie++;
             }
             else {
@@ -115,7 +114,9 @@ public class InterfaceJeu {
                 String valeursKO = scanner.nextLine();
                 saisieUtilisateur = valeursOK + "-" + valeursKO;
                 this.derniereReponseUtilisateur = saisieUtilisateur;
-                saisieCorrecte = new ControleSaisie().controlerSaisieUtilisateur(saisieUtilisateur, "reponseUtilisateurMastermind", 3, "0123456789");
+                StringBuilder reponsesEvalMastermind = new StringBuilder();
+                for (int i = 0; i <= jeu.getConfiguration().getTailleCombinaison(); i++) {reponsesEvalMastermind.append(i);}
+                saisieCorrecte = new ControleSaisie().controlerSaisieMastermindDefenseur(saisieUtilisateur, 3, reponsesEvalMastermind.toString());
                 numeroSaisie++;
             }
         }
