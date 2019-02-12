@@ -15,6 +15,7 @@ public class InterfaceJeu {
     private String derniereCombinaisonProposee;
     private String derniereReponseUtilisateur;
     private int jeuChoisi;
+    private int numeroTour;
 
     public void lancerJeu(int jeuChoisi, int modeDeJeu, Configuration configuration) {
         Jeu partieJeu1;
@@ -38,7 +39,7 @@ public class InterfaceJeu {
         derniereCombinaisonProposee = "";
         derniereReponseUtilisateur = "";
         jeuTermine = false;
-        int numeroTour = 0;
+        numeroTour = 0;
         while ((partieJeu1.getNombreEssaisRestants() > 0) && (!jeuTermine))
         {
             switch (modeDeJeu) {
@@ -49,10 +50,11 @@ public class InterfaceJeu {
                     jouerTourModeDefenseur(derniereCombinaisonProposee, derniereReponseUtilisateur, partieJeu1);
                     break;
                 case 3 :
-                    numeroTour++;
+                    //numeroTour++;
                     jouerTourModeDuel(numeroTour, combinaisonAtrouver, partieJeu1, derniereCombinaisonProposee, derniereReponseUtilisateur, partieJeu2);
                     break;
             }
+            numeroTour++;
         }
         if ((partieJeu1.getNombreEssaisRestants() == 0) && (!jeuTermine)) {
             System.out.println("Dommage, vous avez perdu");
@@ -90,6 +92,14 @@ public class InterfaceJeu {
     }
 
     private void jouerTourModeDefenseur(String derniereCombinaisonProposee, String derniereReponseUtilisateur, Jeu jeu) {
+        if (this.numeroTour == 0) {
+            if (jeuChoisi == 1) {
+                System.out.println("--> Veuillez choisir une combinaison de " + jeu.getConfiguration().getTailleCombinaison() + " caractères parmi la liste : " +jeu.getConfiguration().getListeValeursPossibles());
+            }
+            else {
+                System.out.println("--> Veuillez choisir une combinaison de " + jeu.getConfiguration().getTailleCombinaison() + " chiffres parmi la liste : " +jeu.getConfiguration().getListeValeursPossibles());
+            }
+        }
         this.derniereCombinaisonProposee = jeu.proposerCombinaison(derniereCombinaisonProposee,derniereReponseUtilisateur);
         boolean saisieCorrecte = false;
         int numeroSaisie = 0;

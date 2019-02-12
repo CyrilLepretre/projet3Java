@@ -27,17 +27,4 @@ public class ControleSaisie {
         return true;
     }
 
-    /*private boolean controlerSaisieUtilisateurMenuJeu(String saisieUtilsateur, int tailleAttendue, String listeValeursValides) {
-        if (saisieUtilsateur.length() != tailleAttendue) {
-            return false;
-        }
-        else if (!Character.isDigit(saisieUtilsateur.charAt(0))) {
-            return false;
-        }
-        else if (!(listeValeursValides.indexOf(saisieUtilsateur.charAt(0)) >= 0)) {
-            return false;
-        }
-        return true;
-    }*/
-
 }
