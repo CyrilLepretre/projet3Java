@@ -2,11 +2,29 @@ package fr.axa.cyril.Jeu;
 import fr.axa.cyril.Menu.Configuration;
 import java.util.ArrayList;
 import java.util.List;
-//import java.util.ListIterator;
 
 /**
- * Jeu Mastermind
+ * <b>Mastermind est la classe représentant une partie de Mastermind</b>
+ *     Elle est compososée d'informations issues de la classe dont elle hérite à savoir :
+ *     <ul>
+ *         <li>Une configuration</li>
+ *         <li>Un nombre d'essais restants</li>
+ *         <li>Un statut de fin</li>
+ *     </ul>
+ *     et d'informations spécifiques :
+ *     <ul>
+ *         <li>Un tableau de combinaison candidates, qui sera réduit par suppression d'éléments jusqu'à avoir la bonne combinaison</li>
+ *         <li>Le score maximum qu'une combinaison peut obtenir, quand elle est parfaitement égale à la combinaison secrète</li>
+ *     </ul>
+ *     Pour ce jeu, je me suis inspiré de l'algorithme "Five Guess" (les 5 conjonctions) de Knuth, qui semble être le plus performant pour résoudre le problème du Mastermind
+ *     Les statistiques de cette algortihme sont disponibles dans ce document https://www.apmep.fr/IMG/pdf/10-Mastermind_C.pdf dont je me suis inspiré pour comprendre son fonctionnement, puis que j'ai implémenté
+ *     Dans le cas d'un arangement avec remise (plusieurs fois la même couleur possible), combinaison de 4 couleurs parmi 6 possibles :
+ *     <ul>
+ *         <li>La combinaison secrète est trouvée en 4 essais dans 20% des cas environ</li>
+ *         <li>La combinaison secrète est trouvée en 5 essais dans 80% des cas environ</li>
+ *     </ul>
  *
+ * @see Jeu
  * @author Cyril Lepretre
  * @version 1.0
  */
@@ -45,10 +63,6 @@ public class Mastermind extends Jeu {
         this.setNombreEssaisRestants(this.getNombreEssaisRestants()-1);
         int[] tableauScoreObtenu = this.calculerScoreCombinaison(saisieUtilisateur, combinaisonAtrouver);
         return (transformerTableauScoreEnEntier(tableauScoreObtenu) == scoreMaximum);
-        /*{
-            return true;
-        }
-        return false;*/
     }
 
     /**
@@ -80,7 +94,6 @@ public class Mastermind extends Jeu {
      * @return nouvelle proposition après application de l'algorithme
      */
     public String proposerCombinaison(String combinaisonEnCours, String saisieUtilisateur) {
-        //this.nombreEssaisRestants --;
         this.setNombreEssaisRestants(this.getNombreEssaisRestants()-1);
         String[] reponseAsplitter;
         int scoreReponse;
@@ -92,17 +105,8 @@ public class Mastermind extends Jeu {
         else {
             reponseAsplitter = saisieUtilisateur.split("-");
             scoreReponse = Integer.valueOf(reponseAsplitter[0])*10 + Integer.valueOf(reponseAsplitter[1]);
-
             listeCandidats.removeIf((String valeurCombinaisonCandidat) -> (this.transformerTableauScoreEnEntier(calculerScoreCombinaison(valeurCombinaisonCandidat, combinaisonEnCours)) != scoreReponse));
-            /* //Ci-dessous l'ancien parcours à la place de listeCandidats.removeIf
-            ListIterator<String> parcoursListeCandidats = listeCandidats.listIterator();
-            while (parcoursListeCandidats.hasNext()) {
-                String valeurCombinaisonCandidat = parcoursListeCandidats.next();
-                if (this.transformerTableauScoreEnEntier(calculerScoreCombinaison(valeurCombinaisonCandidat, combinaisonEnCours)) != scoreReponse) {
-                    parcoursListeCandidats.remove();
-                }
-            }*/
-            System.out.println("OK, on continue. Il me reste " + listeCandidats.size() + " combinaisons possibles");
+            //System.out.println("OK, on continue. Il me reste " + listeCandidats.size() + " combinaisons possibles");
             return this.fournirCombinaisonDePoidsMinimum(listeCandidats);
         }
     }
@@ -139,8 +143,6 @@ public class Mastermind extends Jeu {
         int poidsMinimum=9999;
         int maxPoidsCombinaison;
         String combinaisonDePoidsMinimum = "";
-
-        // For en remplacement du while plus bas
         for (String valeurCombinaison : listeCandidatsRestants) {
             maxPoidsCombinaison = this.calculerMaxPoidsCombinaison(valeurCombinaison, listeCandidatsRestants);
             if (maxPoidsCombinaison < poidsMinimum) {
@@ -148,17 +150,6 @@ public class Mastermind extends Jeu {
                 combinaisonDePoidsMinimum = valeurCombinaison;
             }
         }
-
-        /* //Avant réécriture pour supprimer warning loop, remplacé par for
-        ListIterator<String> parcoursListePossibilites = listeCandidatsRestants.listIterator();
-        while (parcoursListePossibilites.hasNext()) {
-            String valeurCombinaison = parcoursListePossibilites.next();
-            maxPoidsCombinaison = this.calculerMaxPoidsCombinaison(valeurCombinaison, listeCandidatsRestants);
-            if (maxPoidsCombinaison < poidsMinimum) {
-                poidsMinimum = maxPoidsCombinaison;
-                combinaisonDePoidsMinimum = valeurCombinaison;
-            }
-        }*/
         return combinaisonDePoidsMinimum;
     }
 
@@ -172,25 +163,13 @@ public class Mastermind extends Jeu {
      */
     private int calculerMaxPoidsCombinaison (String combinaisonEvaluee, List<String> listeCandidatsAtt) {
         int maxPoids = 0;
-        // On initialise de 0 à 10 fois la taille de la combinaison nominale, donc taille+1 !
         int[] tableauDePoids = new int[10*this.getConfiguration().getTailleCombinaison() + 1];
-        //on initialise le tableau de poids pour la combinaison en cours d'évaluation, la dernière case correspond au score maximum
         for (int i=0; i<=10*this.getConfiguration().getTailleCombinaison(); i++) {
             tableauDePoids[i] = 0;
         }
-        //On va calculer le score de chaque possibilité par rapport à la combinaison choisie, et ajouter 1 dans le tableau de poids
-        //L'index du tableau correspond au score, et la valeur correspond au poids (ie nombre de combinaison ayant obtenu ce score)
-
         for (String valeurCombinaison : listeCandidatsAtt) {
             tableauDePoids[transformerTableauScoreEnEntier(calculerScoreCombinaison(valeurCombinaison, combinaisonEvaluee))] += 1;
         }
-
-        /*ListIterator<String> parcoursListePossibilites = listeCandidatsAtt.listIterator();
-        while (parcoursListePossibilites.hasNext()) {
-            String valeurCombinaison = parcoursListePossibilites.next();
-            tableauDePoids[transformerTableauScoreEnEntier(calculerScoreCombinaison(valeurCombinaison, combinaisonEvaluee))] += 1;
-        }*/
-        //Puis on parcourt le tableau pour identifier le poids maximum obtenu sur un des scores
         for (int i=0; i<=10*this.getConfiguration().getTailleCombinaison(); i++) {
             if (maxPoids < tableauDePoids[i]) {
                 maxPoids = tableauDePoids[i];
@@ -256,18 +235,14 @@ public class Mastermind extends Jeu {
      */
     public boolean determinerSiFinJeu(String reponseEvalutionUtilisateur) {
         String[] reponseASplitter = reponseEvalutionUtilisateur.split("-");
-
-
         return (Integer.valueOf(reponseASplitter[0]) == this.getConfiguration().getTailleCombinaison());
-        /*if (Integer.valueOf(reponseASplitter[0]) == this.configuration.getTailleCombinaison()) {
-            jeuFini= true;
-        }
-        else {
-            jeuFini = false;
-        }
-        return jeuFini;*/
     }
 
+    /**
+     * Méthode non utilisée dans le cadre du Mastermind
+     * @param saisieUtilisateur Réponse de l'utilisateur à la proposition faite au préalable
+     * @return true dans tous les cas
+     */
     public boolean verifierErreurFonctionnelle(String saisieUtilisateur) {
         return true;
     }

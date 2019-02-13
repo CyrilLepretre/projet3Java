@@ -3,9 +3,10 @@ package fr.axa.cyril.Jeu;
 import fr.axa.cyril.Menu.Configuration;
 
 /**
- * Classe abstraite pour un jeu
- * Intègre l'implémentation des méthodes réutilisables par n'importe quel jeu
- * Les méthodes présentant des spécificités en fonction des jeux sont déclarées abstraites, et implémentées dans les classes dédiées
+ * <b>Classe abstraite pour un jeu</b>
+ *     Intègre l'implémentation des méthodes réutilisables par n'importe quel jeu
+ *     Les méthodes présentant des spécificités en fonction des jeux sont déclarées abstraites, et implémentées dans les classes dédiées
+ *
  * @author Cyril Lepretre
  * @version 1.0
  */
@@ -100,8 +101,19 @@ public abstract class Jeu {
      */
     public abstract String calculerReponseCombinaison(String saisieUtilisateur, String combinaisonAtrouver);
 
+    /**
+     * Méthode abastraite visant à identifier une éventuelle erreur fonctionnelle dans la réponse fournie par l'utilisateur
+     * Ex : Dans Recherche +/-, si l'ordinateur fournit la proposition "00000" et que l'opposant répond un "-"
+     * @param saisieUtilisateur Réponse de l'utilisateur à la proposition faite au préalable
+     * @return true si OK, false sinon
+     */
     public abstract boolean verifierErreurFonctionnelle(String saisieUtilisateur);
 
+    /**
+     * Méthode abstraite pour déterminer si le jeu est terminé
+     * @param reponseEvalutionUtilisateur La proposition de l'utilisateur
+     * @return true si la combinaison secrète a été trouvée, false sinon
+     */
     public abstract boolean determinerSiFinJeu(String reponseEvalutionUtilisateur);
 
 }

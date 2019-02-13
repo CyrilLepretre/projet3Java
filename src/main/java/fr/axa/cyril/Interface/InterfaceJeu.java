@@ -7,6 +7,24 @@ import fr.axa.cyril.Jeu.RecherchePlusMoins;
 import fr.axa.cyril.Menu.Configuration;
 import java.util.Scanner;
 
+/**
+ * <b>Interface de jeu est la classe gérant les entrées/sorties de la console</b>
+ *     Une classe dédiée permet notamment de faciliter la migration vers un mode autre que console (interface Swing par exemple)
+ *     Elle est caractérisée par les informations suivantes :
+ *     <ul>
+ *         <li>Un scanner qui sera utilisé pour capter la réponse de l'utilisateur tout au long du jeu</li>
+ *         <li>La saisie de l'utilisteur</li>
+ *         <li>Une information indiquant si le jeu est terminé ou non</li>
+ *         <li>La dernière combinaison proposée</li>
+ *         <li>La dernière réponse de l'utilisateur</li>
+ *         <li>Le jeu choisi par l'utilisateur</li>
+ *         <li>Le mode choisi</li>
+ *         <li>Le numéro du tour de jeu</li>
+ *     </ul>
+ *
+ * @author Cyril Lepretre
+ * @version 1.0
+ */
 public class InterfaceJeu {
 
     private Scanner scanner;
@@ -17,6 +35,18 @@ public class InterfaceJeu {
     private int jeuChoisi;
     private int numeroTour;
 
+    /**
+     * Lancement du jeu
+     * Instancie le jeu en question (2 jeux dans chaque mode dans le cas du duel) et joue chaque tour jusqu'à la fin du jeu
+     * La fin du jeu arrive si :
+     * <ul>
+     *     <li>La réponse a été trouvée dans le nombre d'essais impartis</li>
+     *     <li>La réponse n'a pas été trouvée et on ne dispose plus d'essai</li>
+     * </ul>
+     * @param jeuChoisi Le jeu choisi par l'utilisateur
+     * @param modeDeJeu Le mode choisi
+     * @param configuration La configuration du jeu
+     */
     public void lancerJeu(int jeuChoisi, int modeDeJeu, Configuration configuration) {
         Jeu partieJeu1;
         Jeu partieJeu2;
@@ -65,6 +95,11 @@ public class InterfaceJeu {
         }
     }
 
+    /**
+     * Un tour de jeu en mode Challenger
+     * @param combinaisonAtrouver La combinaison secrète
+     * @param jeu l'instance de jeu
+     */
     private void jouerTourModeChallenger(String combinaisonAtrouver, Jeu jeu) {
         boolean saisieCorrecte = false;
         int numeroSaisie = 0;
@@ -92,6 +127,12 @@ public class InterfaceJeu {
         }
     }
 
+    /**
+     * Un tour de jeu en mode défenseur
+     * @param derniereCombinaisonProposee La dernière combinaison proposée
+     * @param derniereReponseUtilisateur La dernière réponse de l'utilisateur
+     * @param jeu L'instance de jeu
+     */
     private void jouerTourModeDefenseur(String derniereCombinaisonProposee, String derniereReponseUtilisateur, Jeu jeu) {
         if (this.numeroTour == 0) {
             if (jeuChoisi == 1) {
@@ -140,6 +181,21 @@ public class InterfaceJeu {
         }
     }
 
+    /**
+     * Tour de jeu en mode duel
+     * Joue à tour de rôle :
+     * <ul>
+     *     <li>Un tour de jeu en mode challenger</li>
+     *     <li>Un tour de jeu en mode défenseur</li>
+     * </ul>
+     * En cas de victoire, s'arrête après que les 2 tours soient joués afin de gérer les cas d'égalité
+     * @param numeroTour Le numéro du tour
+     * @param combinaisonAtrouver LA combinaison secrète de l'ordinateur à trouver
+     * @param jeuChallenger L'instance de jeu challenger
+     * @param derniereCombinaisonProposee La dernière combinaison proposée
+     * @param derniereReponseUtilisateur La dernière réponse de l'utilisateur
+     * @param jeuDefenseur L'instance de jeu défenseur
+     */
     private void jouerTourModeDuel(int numeroTour, String combinaisonAtrouver, Jeu jeuChallenger, String derniereCombinaisonProposee, String derniereReponseUtilisateur, Jeu jeuDefenseur) {
         System.out.println("***** Tour " + numeroTour + " *****");
         System.out.println("--> A votre tour");

@@ -3,6 +3,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * <b>Configuration est la classe représentant la configuration d'un jeu.</b>
+ *     Une configuration est caractérisée par les informations suivantes :
+ *     <ul>
+ *         <li>Un nom de jeu</li>
+ *         <li>Une description du but du jeu</li>
+ *         <li>La taille d'une combinaison</li>
+ *         <li>Le maximum d'essais possibles pour le dit jeu</li>
+ *         <li>Un indicateur pour déterminer si on active ou non le mode debug</li>
+ *         <li>Les listes de valeurs possibles et admissibles dans une proposition</li>
+ *         <li>Dans le cas du Mastermind, le nombre de couleurs disponibles</li>
+ *     </ul>
+ *     La configuration se base sur un fichier config.properties, dans lequel on renseigne l'ensemble des paramètres des jeux
+ *
+ * @author Cyril Lepretre
+ * @version 1.0
+ */
 public class Configuration {
     private String nom;
     private String description;
@@ -15,6 +32,12 @@ public class Configuration {
     public Configuration() {
     }
 
+    /**
+     * Constructeur d'une configuration, qui s'appuie sur le fichier fourni en paramètre pour valoriser les variables de classe
+     * Compte-tenu des spécificités à chaque jeu, on a 1 objet de type Configuration par jeu
+     * @param cheminFichierProperties Le chemin d'accès du fichier config.properties
+     * @param jeu Le nom du jeu dont la configuration est instanciée (
+     */
     public void initConfiguration(String cheminFichierProperties, String jeu) {
         InputStream input;
         Properties proprietes = new Properties();
@@ -28,7 +51,6 @@ public class Configuration {
             else {
                 this.initConfigurationRecherchePlusMoins(proprietes);
             }
-            //this.initUneConfiguration(jeu, proprietes);
             input.close();
         } catch (IOException e) {
             System.out.println("Impossible de charger le fichier " + cheminFichierProperties);
@@ -71,28 +93,6 @@ public class Configuration {
             System.out.println("Une information nécessaire au lancement du jeu Recherche +/- est manquante ou erronée dans le fichier config.properties");
         }
     }
-
-    /*
-    private void initUneConfiguration(String jeu, Properties proprietes) {
-        try {
-            if (jeu.equals("mastermind"))
-            {
-                this.nom = "Mastermind";
-                this.nombreCouleurs = Integer.valueOf(proprietes.getProperty(jeu + ".nombreCouleurs"));
-                this.listeValeursPossibles = proprietes.getProperty(jeu + ".listeValeursPossibles").substring(0,this.nombreCouleurs);
-            }
-            else {
-                this.nom = "Recherche +/-";
-                this.listeValeursPossibles = proprietes.getProperty(jeu + ".listeValeursPossibles");
-            }
-            this.tailleCombinaison = Integer.valueOf(proprietes.getProperty(jeu + ".tailleCombinaison"));
-            this.maxEssais = Integer.valueOf(proprietes.getProperty(jeu + ".maxEssais"));
-            this.modeDebug = Boolean.valueOf(proprietes.getProperty(jeu + ".modeDebug"));
-            this.description = proprietes.getProperty(jeu + ".description");
-        } catch (Exception e) {
-            System.out.println("Une information nécessaire au lancement du jeu " + jeu + " est manquante ou erronée dans le fichier config.properties");
-        }
-    }*/
 
     public String getNom() {
         return nom;

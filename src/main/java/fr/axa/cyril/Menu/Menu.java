@@ -6,11 +6,38 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.io.File;
 
+/**
+ * <b>Menu est la classe représentant le menu du jeu</b>
+ *     Elle permet de choisir le jeu parmi :
+ *     <ul>
+ *         <li>Mastermind</li>
+ *         <li>Recherche +/-</li>
+ *     </ul>
+ *     et le mode de jeu parmi :
+ *     <ul>
+ *         <li>Challenger : vous devez trouver la combinaison secrète de l'ordinateur</li>
+ *         <li>Défenseur : l'ordinateur doit trouver votre combinaison secrète</li>
+ *         <li>Duel : vous jouez à tour de rôle contre l'ordinateur et le vainqueur est celui qui trouve la combinaison secrète de l'autre en premier</li>
+ *     </ul>
+ *     Elle est caractérisée par les configurations de chaque jeu, qu'elle utilise pour afficher des informations concernant le jeu lancé :
+ *     <ul>
+ *         <li>Configuration du Mastermind</li>
+ *         <li>Configuration de Recherche +/-</li>
+ *     </ul>
+ *
+ * @author Cyril Lepretre
+ * @version 1.0
+ */
 public class Menu {
 
     private final Configuration mastermindConf;
     private final Configuration recherchePlusMoinsConf;
 
+    /**
+     * Constructeur du menu
+     *
+     * Il initialise les configurations des jeux
+     */
     public Menu() {
         System.out.println(new File("").getAbsolutePath());
         mastermindConf = new Configuration();
@@ -19,6 +46,9 @@ public class Menu {
         recherchePlusMoinsConf.initConfiguration("/config.properties" , "recherche");
     }
 
+    /**
+     * Affichage du menu initial
+     */
     public void affichageMenuInitial() {
         affichageBandeauChoixJeu();
         int jeuChoisi = saisieMenu12ou123("Veuillez saisir 1 ou 2", "12");
@@ -46,6 +76,17 @@ public class Menu {
         }
     }
 
+    /**
+     * Affichage du menu après avoir joué à un jeu
+     * Propose 3 possibilités :
+     * <ul>
+     *     <li>Rejouer au même jeu que le précédent</li>
+     *     <li>Choisir un autre jeu dans la liste</li>
+     *     <li>Quitter</li>
+     * </ul>
+     * @param jeuPrecedent Le jeu précédemment joué, afin de proposer de rejouer au même jeu que le précédent
+     * @param modePrecedent Mode de jeu précédent, pour rejouer dans les mêmes conditions
+     */
     private void affichageMenuSuivant(int jeuPrecedent, int modePrecedent) {
         affichageBandeauSuivant();
         int choix = saisieMenu12ou123("Veuillez saisir 1, 2 ou 3", "123");
@@ -69,6 +110,14 @@ public class Menu {
         }
     }
 
+    /**
+     * Récupération de la réponse de l'utilisateur et contrôle tant qu'elle n'est pas correcte
+     * S'appuie sur la classe de contrôle de saisie pour vérifier la saisie de l'utilisateur
+     * @see ControleSaisie
+     * @param message Ce qu'a saisi l'utilsateur
+     * @param valeursAttendues Les caractères acceptés dans la réponse fournie par l'utilisateur
+     * @return La réponse valide
+     */
     private int saisieMenu12ou123(String message, String valeursAttendues) {
         Scanner saisie;
         int reponse=0;
@@ -89,6 +138,9 @@ public class Menu {
         return reponse;
     }
 
+    /**
+     * Affichage du bandeau de choix de jeu
+     */
     private void affichageBandeauChoixJeu() {
         System.out.println("-----------------------------------------------");
         System.out.println("                     MENU                      ");
@@ -99,6 +151,9 @@ public class Menu {
         System.out.println("A quel jeu souhaitez-vous jouer ?");
     }
 
+    /**
+     * Affichage du bandeau de choix du mode de jeu
+     */
     private void affichageBandeauChoixMode() {
         System.out.println("Les modes disponibles : ");
         System.out.println("1 : Challenger ---------> Trouvez la combinaison secrète de l'ordinateur");
@@ -107,6 +162,9 @@ public class Menu {
         System.out.println("Quel mode choisissez-vous ?");
     }
 
+    /**
+     * Affichage du bandeau de choix après avoir jouer à un jeu
+     */
     private void affichageBandeauSuivant() {
         System.out.println("##########################################");
         System.out.println("Que souhaitez-vous faire à présent ?");

@@ -2,12 +2,39 @@ package fr.axa.cyril.Jeu;
 
 import fr.axa.cyril.Menu.Configuration;
 
+/**
+ * <b>RecherchePlusMoins est la classe représentant une partie du jeu RecherchePlusMoins</b>
+ *     Elle est compososée d'informations issues de la classe dont elle hérite à savoir :
+ *     <ul>
+ *         <li>Une configuration</li>
+ *         <li>Un nombre d'essais restants</li>
+ *         <li>Un statut de fin</li>
+ *     </ul>
+ *     et d'informations spécifiques :
+ *     <ul>
+ *         <li>Une valeur maximum (correspondant au max dans les chiffres qu'on peut renseigner)</li>
+ *         <li>Une valeur minimum (correspondant au min dans les chiffres qu'on peut renseigner)</li>
+ *         <li>Un tableau de bornes supérieures permettant de réduire le max au fur et à mesure</li>
+ *         <li>Un tableau de bornes inférieures permettant d'augementer le min au fur et à mesure</li>
+ *     </ul>
+ *
+ * @see Jeu
+ *
+ * @author Cyril Lepretre
+ * @version 1.0
+ */
 public class RecherchePlusMoins extends Jeu {
     private final int maximum;
     private final int minimum;
     private int[] borneInf;
     private int[] borneSup;
 
+    /**
+     * Constructeur d'un jeu Recherche +/-
+     * Pose les bornes inférieure et supérieure qui seront utilisées pour découvrir la combianison secrète de l'utilisateur
+     * Initalilse également le maximum et minimum qui correspondent respectivement à la borne supérieure intiale et borne inférieure initiale
+     * @param configuration configuration du Recherche +/-
+     */
     public RecherchePlusMoins(Configuration configuration) {
         super(configuration);
         borneInf = new int[this.getConfiguration().getListeValeursPossibles().length()];
@@ -20,11 +47,15 @@ public class RecherchePlusMoins extends Jeu {
         minimum = borneInf[0];
     }
 
+    /**
+     * Vérifie si la combinaison secrète a été trouvée
+     * @param saisieUtilisateur La combinaison fournie par l'utilisateur
+     * @param combinaisonAtrouver La combinaison à trouver
+     * @return true si la combinaison secrète a été trouvée, false sinon
+     */
     public boolean verifierCombinaison(String saisieUtilisateur, String combinaisonAtrouver) {
-        //this.nombreEssaisRestants --;
         this.setNombreEssaisRestants(this.getNombreEssaisRestants()-1);
         if (saisieUtilisateur.equals(combinaisonAtrouver)) {
-            //this.jeuFini = true;
             this.setJeuFini(true);
             return true;
         }
@@ -33,6 +64,18 @@ public class RecherchePlusMoins extends Jeu {
         }
     }
 
+    /**
+     * Construit et retourne l'évaluation de la combinaison proposée par l'utilisateur par rapport à la combinaison secrète à trouver
+     * Indique
+     * <ul>
+     *     <li>Des "+" quand le chiffre à trouver est plus grand</li>
+     *     <li>Des "-" quand il est plus petit</li>
+     *     <li>Des "=" si le chiffre proposé est correct</li>
+     * </ul>
+     * @param saisieUtilisateur La proposition fournie par l'utilisateur
+     * @param combinaisonAtrouver La combinaison secrète à trouver
+     * @return La chaîne de caractères correspondant à la réponse à afficher à l'utilisateur
+     */
     public String calculerReponseCombinaison(String saisieUtilisateur, String combinaisonAtrouver) {
         StringBuilder resultat = new StringBuilder(this.getConfiguration().getTailleCombinaison());
         for (int i=0; i<saisieUtilisateur.length(); i++) {
@@ -58,7 +101,6 @@ public class RecherchePlusMoins extends Jeu {
      * @return la chaine de chiffres calculée par l'ordinateur
      */
     public String proposerCombinaison(String combinaisonEnCours, String saisieUtilisateur) {
-        //this.nombreEssaisRestants --;
         this.setNombreEssaisRestants(this.getNombreEssaisRestants()-1);
         int complement;
         StringBuilder proposition = new StringBuilder(this.getConfiguration().getTailleCombinaison());
@@ -72,19 +114,16 @@ public class RecherchePlusMoins extends Jeu {
                 switch (saisieUtilisateur.charAt(i)) {
                     case '=' :
                         proposition.append(combinaisonEnCours.charAt(i));
-                        System.out.println("max:"+maximum+" min:"+minimum+" borneSup:"+borneSup[i]+" borneInf"+borneInf[i]);
                         break;
                     case '-' :
                         complement = Character.getNumericValue(combinaisonEnCours.charAt(i)) - Math.max(((Character.getNumericValue(combinaisonEnCours.charAt(i)) - borneInf[i]) / 2), 1);
                         borneSup[i] = complement;
                         proposition.append(complement);
-                        System.out.println("max:"+maximum+" min:"+minimum+" borneSup:"+borneSup[i]+" borneInf"+borneInf[i]);
                         break;
                     case '+' :
                         complement = Character.getNumericValue(combinaisonEnCours.charAt(i)) + Math.max(((borneSup[i] - (Character.getNumericValue(combinaisonEnCours.charAt(i)))) / 2), 1);
                         proposition.append(complement);
                         borneInf[i] = complement;
-                        System.out.println("max:"+maximum+" min:"+minimum+" borneSup:"+borneSup[i]+" borneInf"+borneInf[i]);
                         break;
                 }
             }
@@ -92,12 +131,15 @@ public class RecherchePlusMoins extends Jeu {
         return proposition.toString();
     }
 
+    /**
+     * Méthode pour déterminer si le jeu est terminé
+     * @param reponseEvalutionUtilisateur La proposition de l'utilisateur
+     * @return true si la combinaison secrète a été trouvée, false sinon
+     */
     public boolean determinerSiFinJeu(String reponseEvalutionUtilisateur) {
-        //jeuFini = true;
         this.setJeuFini(true);
         for (int i = 0; i < reponseEvalutionUtilisateur.length(); i++) {
             if (!Character.valueOf(reponseEvalutionUtilisateur.charAt(i)).equals('=')) {
-                //jeuFini = false;
                 this.setJeuFini(false);
             }
         }
