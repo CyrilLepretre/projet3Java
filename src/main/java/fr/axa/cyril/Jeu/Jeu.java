@@ -14,9 +14,9 @@ public abstract class Jeu {
     /**
      * Configuration du jeu
      */
-    protected Configuration configuration;
-    protected int nombreEssaisRestants;
-    protected boolean jeuFini;
+    private final Configuration configuration;
+    private int nombreEssaisRestants;
+    private boolean jeuFini;
 
     /**
      * Constructeur de jeu
@@ -32,8 +32,16 @@ public abstract class Jeu {
         return jeuFini;
     }
 
+    protected void setJeuFini(boolean fini) {
+        this.jeuFini = fini;
+    }
+
     public int getNombreEssaisRestants() {
         return nombreEssaisRestants;
+    }
+
+    protected void setNombreEssaisRestants(int nombreEssaisRestants) {
+        this.nombreEssaisRestants = nombreEssaisRestants;
     }
 
     public Configuration getConfiguration() {
@@ -58,7 +66,7 @@ public abstract class Jeu {
      * @param borneSup La borne supérieure limitant la valeur du chiffre généré
      * @return Le chiffre généré alétoirement
      */
-    public int genererChiffreRandom (int borneSup) {
+    protected int genererChiffreRandom (int borneSup) {
         if (borneSup < 1) {
             System.out.println("Erreur de borne supérieure, qui doit être supérieure ou égale à 1");
             return 0;
@@ -72,10 +80,9 @@ public abstract class Jeu {
      * Méthode abstraite de vérification de combinaison
      * @param saisieUtilisateur La combinaison fournie par l'utilisateur
      * @param combinaisonAtrouver La combinaison à trouver
-     * @param nombreEssaisRestants Le nombre d'essais restants
      * @return true ou false pour indiquer si la combinaison fournie est celle attendue
      */
-    public abstract boolean verifierCombinaison(String saisieUtilisateur, String combinaisonAtrouver, int nombreEssaisRestants);
+    public abstract boolean verifierCombinaison(String saisieUtilisateur, String combinaisonAtrouver);
 
     /**
      * Méthode abstraite de proposition de combinaison
@@ -86,12 +93,14 @@ public abstract class Jeu {
     public abstract String proposerCombinaison(String combinaisonEnCours, String saisieUtilisateur);
 
     /**
-     *
-     * @param saisieUtilisateur
-     * @param combinaisonAtrouver
-     * @return
+     * Méthode abstraite renvoyant l'évaluation de la proposition fournie par l'utilisateur
+     * @param saisieUtilisateur La proposition fournie par l'utilisateur
+     * @param combinaisonAtrouver La combinaison secrète à trouver
+     * @return Le message à afficher à l'utilisateur
      */
     public abstract String calculerReponseCombinaison(String saisieUtilisateur, String combinaisonAtrouver);
+
+    public abstract boolean verifierErreurFonctionnelle(String saisieUtilisateur);
 
     public abstract boolean determinerSiFinJeu(String reponseEvalutionUtilisateur);
 

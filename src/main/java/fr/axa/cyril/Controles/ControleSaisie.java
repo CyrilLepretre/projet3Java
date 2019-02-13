@@ -21,10 +21,19 @@ public class ControleSaisie {
         else if (!(listeValeursValides.indexOf(saisieUtilisateur.charAt(0)) >= 0)) {
             return false;
         }
-        else if (!(listeValeursValides.indexOf(saisieUtilisateur.charAt(2)) >= 0)) {
+        else return (listeValeursValides.indexOf(saisieUtilisateur.charAt(2)) >= 0);
+            /*if (!(listeValeursValides.indexOf(saisieUtilisateur.charAt(2)) >= 0)) {
             return false;
         }
-        return true;
+        return true;*/
     }
 
+    /*public boolean controlerSaisieRecherchePlusMoinsDefenseur(String saisieUtilisateur, int[] borneSup, int[] borneInf, int maximum, int minimum) {
+        for (int i=0; i < saisieUtilisateur.length(); i++) {
+            if (((borneSup[i] == minimum) && (Character.valueOf(saisieUtilisateur.charAt(i)).equals('-'))) || ((borneInf[i] == maximum) && (Character.valueOf(saisieUtilisateur.charAt(i)).equals('+')))) {
+                return false;
+            }
+        }
+        return true;
+    }*/
 }

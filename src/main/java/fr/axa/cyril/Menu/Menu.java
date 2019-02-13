@@ -8,8 +8,8 @@ import java.io.File;
 
 public class Menu {
 
-    private Configuration mastermindConf;
-    private Configuration recherchePlusMoinsConf;
+    private final Configuration mastermindConf;
+    private final Configuration recherchePlusMoinsConf;
 
     public Menu() {
         System.out.println(new File("").getAbsolutePath());

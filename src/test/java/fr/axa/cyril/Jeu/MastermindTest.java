@@ -7,11 +7,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MastermindTest {
-    String liste;
-    Configuration conf;
+    private String liste;
+    private Configuration conf;
 
     @BeforeEach
-    public void init(){
+    private void init(){
         conf = new Configuration();
         conf.initConfiguration("/config.properties" , "mastermind");
     }

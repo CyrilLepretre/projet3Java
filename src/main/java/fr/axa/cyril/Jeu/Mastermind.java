@@ -2,7 +2,7 @@ package fr.axa.cyril.Jeu;
 import fr.axa.cyril.Menu.Configuration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
+//import java.util.ListIterator;
 
 /**
  * Jeu Mastermind
@@ -19,7 +19,7 @@ public class Mastermind extends Jeu {
      * Le score maximum qu'un combinaison peut obtenir
      * Sachant qu'un pion bien placé rapporte 10 points, et 1 mal placé 1 point
      */
-    private int scoreMaximum;
+    private final int scoreMaximum;
 
     /**
      * Constructeur du jeu Mastermind
@@ -27,7 +27,7 @@ public class Mastermind extends Jeu {
      */
     public Mastermind(Configuration configuration) {
         super(configuration);
-        this.scoreMaximum = 10 * this.configuration.getTailleCombinaison();
+        this.scoreMaximum = 10 * this.getConfiguration().getTailleCombinaison();
     }
 
     /**
@@ -40,13 +40,15 @@ public class Mastermind extends Jeu {
      * @param combinaisonAtrouver La chaine de caractères générée à trouver
      * @return true si la combinaison a été trouvée, false sinon
      */
-    public boolean verifierCombinaison(String saisieUtilisateur, String combinaisonAtrouver, int nombreEssaisRestants) {
-        this.nombreEssaisRestants --;
+    public boolean verifierCombinaison(String saisieUtilisateur, String combinaisonAtrouver) {
+        //this.nombreEssaisRestants --;
+        this.setNombreEssaisRestants(this.getNombreEssaisRestants()-1);
         int[] tableauScoreObtenu = this.calculerScoreCombinaison(saisieUtilisateur, combinaisonAtrouver);
-        if (transformerTableauScoreEnEntier(tableauScoreObtenu) == scoreMaximum) {
+        return (transformerTableauScoreEnEntier(tableauScoreObtenu) == scoreMaximum);
+        /*{
             return true;
         }
-        return false;
+        return false;*/
     }
 
     /**
@@ -78,23 +80,28 @@ public class Mastermind extends Jeu {
      * @return nouvelle proposition après application de l'algorithme
      */
     public String proposerCombinaison(String combinaisonEnCours, String saisieUtilisateur) {
+        //this.nombreEssaisRestants --;
+        this.setNombreEssaisRestants(this.getNombreEssaisRestants()-1);
         String[] reponseAsplitter;
         int scoreReponse;
         if (combinaisonEnCours.equals("")) {
             listeCandidats = new ArrayList<>();
-            construireListeInitialeRec(configuration.getTailleCombinaison(), configuration.getNombreCouleurs(), configuration.getListeValeursPossibles(), "", listeCandidats);
+            construireListeInitialeRec(this.getConfiguration().getTailleCombinaison(), this.getConfiguration().getNombreCouleurs(), this.getConfiguration().getListeValeursPossibles(), "", listeCandidats);
             return this.fournirCombinaisonDePoidsMinimum(listeCandidats);
         }
         else {
             reponseAsplitter = saisieUtilisateur.split("-");
             scoreReponse = Integer.valueOf(reponseAsplitter[0])*10 + Integer.valueOf(reponseAsplitter[1]);
+
+            listeCandidats.removeIf((String valeurCombinaisonCandidat) -> (this.transformerTableauScoreEnEntier(calculerScoreCombinaison(valeurCombinaisonCandidat, combinaisonEnCours)) != scoreReponse));
+            /* //Ci-dessous l'ancien parcours à la place de listeCandidats.removeIf
             ListIterator<String> parcoursListeCandidats = listeCandidats.listIterator();
             while (parcoursListeCandidats.hasNext()) {
                 String valeurCombinaisonCandidat = parcoursListeCandidats.next();
                 if (this.transformerTableauScoreEnEntier(calculerScoreCombinaison(valeurCombinaisonCandidat, combinaisonEnCours)) != scoreReponse) {
                     parcoursListeCandidats.remove();
                 }
-            }
+            }*/
             System.out.println("OK, on continue. Il me reste " + listeCandidats.size() + " combinaisons possibles");
             return this.fournirCombinaisonDePoidsMinimum(listeCandidats);
         }
@@ -132,6 +139,17 @@ public class Mastermind extends Jeu {
         int poidsMinimum=9999;
         int maxPoidsCombinaison;
         String combinaisonDePoidsMinimum = "";
+
+        // For en remplacement du while plus bas
+        for (String valeurCombinaison : listeCandidatsRestants) {
+            maxPoidsCombinaison = this.calculerMaxPoidsCombinaison(valeurCombinaison, listeCandidatsRestants);
+            if (maxPoidsCombinaison < poidsMinimum) {
+                poidsMinimum = maxPoidsCombinaison;
+                combinaisonDePoidsMinimum = valeurCombinaison;
+            }
+        }
+
+        /* //Avant réécriture pour supprimer warning loop, remplacé par for
         ListIterator<String> parcoursListePossibilites = listeCandidatsRestants.listIterator();
         while (parcoursListePossibilites.hasNext()) {
             String valeurCombinaison = parcoursListePossibilites.next();
@@ -140,7 +158,7 @@ public class Mastermind extends Jeu {
                 poidsMinimum = maxPoidsCombinaison;
                 combinaisonDePoidsMinimum = valeurCombinaison;
             }
-        }
+        }*/
         return combinaisonDePoidsMinimum;
     }
 
@@ -155,20 +173,25 @@ public class Mastermind extends Jeu {
     private int calculerMaxPoidsCombinaison (String combinaisonEvaluee, List<String> listeCandidatsAtt) {
         int maxPoids = 0;
         // On initialise de 0 à 10 fois la taille de la combinaison nominale, donc taille+1 !
-        int[] tableauDePoids = new int[10*this.configuration.getTailleCombinaison() + 1];
+        int[] tableauDePoids = new int[10*this.getConfiguration().getTailleCombinaison() + 1];
         //on initialise le tableau de poids pour la combinaison en cours d'évaluation, la dernière case correspond au score maximum
-        for (int i=0; i<=10*this.configuration.getTailleCombinaison(); i++) {
+        for (int i=0; i<=10*this.getConfiguration().getTailleCombinaison(); i++) {
             tableauDePoids[i] = 0;
         }
         //On va calculer le score de chaque possibilité par rapport à la combinaison choisie, et ajouter 1 dans le tableau de poids
         //L'index du tableau correspond au score, et la valeur correspond au poids (ie nombre de combinaison ayant obtenu ce score)
-        ListIterator<String> parcoursListePossibilites = listeCandidatsAtt.listIterator();
+
+        for (String valeurCombinaison : listeCandidatsAtt) {
+            tableauDePoids[transformerTableauScoreEnEntier(calculerScoreCombinaison(valeurCombinaison, combinaisonEvaluee))] += 1;
+        }
+
+        /*ListIterator<String> parcoursListePossibilites = listeCandidatsAtt.listIterator();
         while (parcoursListePossibilites.hasNext()) {
             String valeurCombinaison = parcoursListePossibilites.next();
             tableauDePoids[transformerTableauScoreEnEntier(calculerScoreCombinaison(valeurCombinaison, combinaisonEvaluee))] += 1;
-        }
+        }*/
         //Puis on parcourt le tableau pour identifier le poids maximum obtenu sur un des scores
-        for (int i=0; i<=10*this.configuration.getTailleCombinaison(); i++) {
+        for (int i=0; i<=10*this.getConfiguration().getTailleCombinaison(); i++) {
             if (maxPoids < tableauDePoids[i]) {
                 maxPoids = tableauDePoids[i];
             }
@@ -228,18 +251,24 @@ public class Mastermind extends Jeu {
 
     /**
      * Détermine si le jeu est terminé
-     * @param reponseEvalutionUtilisateur
-     * @return
+     * @param reponseEvalutionUtilisateur La réponse qu'a fourni l'utilisateur sur le mode défenseur
+     * @return true si le jeu est terminé, false sinon
      */
     public boolean determinerSiFinJeu(String reponseEvalutionUtilisateur) {
-        this.nombreEssaisRestants --;
         String[] reponseASplitter = reponseEvalutionUtilisateur.split("-");
-        if (Integer.valueOf(reponseASplitter[0]) == this.configuration.getTailleCombinaison()) {
+
+
+        return (Integer.valueOf(reponseASplitter[0]) == this.getConfiguration().getTailleCombinaison());
+        /*if (Integer.valueOf(reponseASplitter[0]) == this.configuration.getTailleCombinaison()) {
             jeuFini= true;
         }
         else {
             jeuFini = false;
         }
-        return jeuFini;
+        return jeuFini;*/
+    }
+
+    public boolean verifierErreurFonctionnelle(String saisieUtilisateur) {
+        return true;
     }
 }

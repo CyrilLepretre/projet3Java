@@ -50,16 +50,17 @@ public class InterfaceJeu {
                     jouerTourModeDefenseur(derniereCombinaisonProposee, derniereReponseUtilisateur, partieJeu1);
                     break;
                 case 3 :
-                    //numeroTour++;
                     jouerTourModeDuel(numeroTour, combinaisonAtrouver, partieJeu1, derniereCombinaisonProposee, derniereReponseUtilisateur, partieJeu2);
                     break;
             }
             numeroTour++;
         }
         if ((partieJeu1.getNombreEssaisRestants() == 0) && (!jeuTermine)) {
-            System.out.println("Dommage, vous avez perdu");
             if (modeDeJeu == 1) {
+                System.out.println("Dommage, vous avez perdu");
                 System.out.println("La combinaison à trouver était : " + combinaisonAtrouver);
+            } else if (modeDeJeu == 2) {
+                System.out.println("Dommage, j'ai perdu");
             }
         }
     }
@@ -82,7 +83,7 @@ public class InterfaceJeu {
             }
             numeroSaisie++;
         }
-        if (jeu.verifierCombinaison(saisieUtilisateur, combinaisonAtrouver, jeu.getNombreEssaisRestants())) {
+        if (jeu.verifierCombinaison(saisieUtilisateur, combinaisonAtrouver)) {
             System.out.println("Félicitations, vous avez gagné en " + (jeu.getConfiguration().getMaxEssais() - jeu.getNombreEssaisRestants()) + " essai(s)");
             jeuTermine = true;
         }
@@ -103,10 +104,10 @@ public class InterfaceJeu {
         this.derniereCombinaisonProposee = jeu.proposerCombinaison(derniereCombinaisonProposee,derniereReponseUtilisateur);
         boolean saisieCorrecte = false;
         int numeroSaisie = 0;
-        System.out.println("Voici ma proposition : " + this.derniereCombinaisonProposee);
+        System.out.println("Voici ma proposition : " + this.derniereCombinaisonProposee + "    [" + jeu.getNombreEssaisRestants() + " essais restant(s)]");
         while (!saisieCorrecte) {
             if (numeroSaisie > 0) {
-                System.out.println("ATTENTION : vous avez saisi un caractère ou un nombre de caractères différent de ce qui est attendu.");
+                System.out.println("ATTENTION : vous avez saisi un caractère ou un nombre de caractères différent de ce qui est attendu ou votre réponse n'est pas cohérente.");
             }
             if (this.jeuChoisi == 2) {
                 System.out.println("Evaluez chaque chiffre de la proposition faite en indiquant (sans les crochets) [=] si le chiffre est correct, [+} si le chiffre est supérieur, [-] si le chiffre est inférieur");
@@ -114,6 +115,9 @@ public class InterfaceJeu {
                 saisieUtilisateur = scanner.nextLine();
                 this.derniereReponseUtilisateur = saisieUtilisateur;
                 saisieCorrecte = new ControleSaisie().controlerSaisieUtilisateurGenerique(saisieUtilisateur, jeu.getConfiguration().getTailleCombinaison(), "+-=");
+                if (saisieCorrecte) {
+                    saisieCorrecte = jeu.verifierErreurFonctionnelle(saisieUtilisateur);
+                }
                 numeroSaisie++;
             }
             else {
