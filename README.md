@@ -1,5 +1,4 @@
-<h1>OpenClassRooms</h1>
-<h3>Développeur d'application Java - Projet 3<h3>
+**OpenClassRooms - Développeur d'application Java - Projet 3**
 
 Ce projet consiste à créer une application proposant 2 jeux de logique :
 * Le Mastermind
