@@ -178,7 +178,7 @@ public class Menu {
      * Affichage du bandeau de choix après avoir jouer à un jeu
      */
     private void affichageBandeauSuivant() {
-        System.out.println("##########################################");
+        System.out.println("################################################");
         System.out.println("Que souhaitez-vous faire à présent ?");
         System.out.println("1 : Rejouer au même jeu et même mode");
         System.out.println("2 : Lancer un autre jeu");

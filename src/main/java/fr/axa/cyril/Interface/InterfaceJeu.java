@@ -109,6 +109,7 @@ public class InterfaceJeu {
         logger.trace("Début tour de jeu en mode Challenger");
         boolean saisieCorrecte = false;
         int numeroSaisie = 0;
+        System.out.println("------------------------------------------------");
         while (!saisieCorrecte) {
             if (numeroSaisie > 0) {
                 System.out.println("ATTENTION : vous avez saisi un caractère ou un nombre de caractères différent de ce qui est attendu.");
@@ -145,11 +146,11 @@ public class InterfaceJeu {
                 System.out.println("--> Veuillez choisir une combinaison de " + jeu.getConfiguration().getTailleCombinaison() + " chiffres parmi la liste : " +jeu.getConfiguration().getListeValeursPossibles());
             }
             System.out.println("Le jeu démarre");
-            System.out.println("------------------------------------------------");
         }
         this.derniereCombinaisonProposee = jeu.proposerCombinaison(derniereCombinaisonProposee,derniereReponseUtilisateur);
         boolean saisieCorrecte = false;
         int numeroSaisie = 0;
+        System.out.println("------------------------------------------------");
         System.out.println("Voici ma proposition : " + this.derniereCombinaisonProposee + "    [" + jeu.getNombreEssaisRestants() + " essais restant(s)]");
         while (!saisieCorrecte) {
             if (numeroSaisie > 0) {
