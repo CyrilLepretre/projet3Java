@@ -1,5 +1,8 @@
 package fr.axa.cyril.Controles;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * <b>ControleSaisie est la classe dédiée aux contrôles des saisies de l'utilisateur</b>
  *
@@ -8,6 +11,7 @@ package fr.axa.cyril.Controles;
  */
 public class ControleSaisie {
 
+    private static Logger logger = LogManager.getLogger(ControleSaisie.class);
     /**
      * Méthode générique de contrôle, qui permet de valider que la saisie de l'utilisateur est conforme aux attentes, passées en paramètres
      * @param saisieUtilisateur La saisie de l'utilisateur
@@ -16,14 +20,19 @@ public class ControleSaisie {
      * @return true si la réponse est valide, false sinon
      */
     public boolean controlerSaisieUtilisateurGenerique(String saisieUtilisateur, int tailleAttendue, String listeValeursValides) {
+        logger.trace("Controle de saisie utilisateur : ");
+        logger.info("Saisie : "+ saisieUtilisateur + " | Taille attendue : " + tailleAttendue + " | liste autorisée : "+ listeValeursValides);
         if (saisieUtilisateur.length() != tailleAttendue) {
+            logger.info("Saisie non valide");
             return false;
         }
         for (int i = 0; i<tailleAttendue; i++) {
             if (!(listeValeursValides.indexOf(saisieUtilisateur.charAt(i)) >= 0)) {
+                logger.info("Saisie non valide");
                 return false;
             }
         }
+        logger.info("Saisie valide");
         return true;
     }
 
@@ -36,12 +45,17 @@ public class ControleSaisie {
      * @return true si la réponse est valide, false sinon
      */
     public boolean controlerSaisieMastermindDefenseur(String saisieUtilisateur, int tailleAttendue, String listeValeursValides) {
+        logger.trace("Controle de saisie utilisateur : ");
+        logger.info("Saisie : "+ saisieUtilisateur + " | Taille attendue : " + tailleAttendue + " | liste autorisée : "+ listeValeursValides);
         if (saisieUtilisateur.length() != tailleAttendue) {
+            logger.info("Saisie non valide");
             return false;
         }
         else if (!(listeValeursValides.indexOf(saisieUtilisateur.charAt(0)) >= 0)) {
+            logger.info("Saisie non valide");
             return false;
         }
-        else return (listeValeursValides.indexOf(saisieUtilisateur.charAt(2)) >= 0);
+        logger.info("Saisie valide");
+        return (listeValeursValides.indexOf(saisieUtilisateur.charAt(2)) >= 0);
     }
 }

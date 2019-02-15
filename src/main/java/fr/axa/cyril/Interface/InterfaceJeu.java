@@ -5,6 +5,8 @@ import fr.axa.cyril.Jeu.Jeu;
 import fr.axa.cyril.Jeu.Mastermind;
 import fr.axa.cyril.Jeu.RecherchePlusMoins;
 import fr.axa.cyril.Menu.Configuration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.util.Scanner;
 
 /**
@@ -34,6 +36,7 @@ public class InterfaceJeu {
     private String derniereReponseUtilisateur;
     private int jeuChoisi;
     private int numeroTour;
+    private static Logger logger = LogManager.getLogger(InterfaceJeu.class);
 
     /**
      * Lancement du jeu
@@ -48,6 +51,7 @@ public class InterfaceJeu {
      * @param configuration La configuration du jeu
      */
     public void lancerJeu(int jeuChoisi, int modeDeJeu, Configuration configuration) {
+        logger.trace("Lancement d'une partie de jeu " + jeuChoisi + " en mode " + modeDeJeu);
         Jeu partieJeu1;
         Jeu partieJeu2;
         this.jeuChoisi = jeuChoisi;
@@ -86,6 +90,7 @@ public class InterfaceJeu {
             numeroTour++;
         }
         if ((partieJeu1.getNombreEssaisRestants() == 0) && (!jeuTermine)) {
+            logger.trace("Fin de  partie de jeu " + jeuChoisi + " en mode " + modeDeJeu);
             if (modeDeJeu == 1) {
                 System.out.println("Dommage, vous avez perdu");
                 System.out.println("La combinaison à trouver était : " + combinaisonAtrouver);
@@ -101,6 +106,7 @@ public class InterfaceJeu {
      * @param jeu l'instance de jeu
      */
     private void jouerTourModeChallenger(String combinaisonAtrouver, Jeu jeu) {
+        logger.trace("Début tour de jeu en mode Challenger");
         boolean saisieCorrecte = false;
         int numeroSaisie = 0;
         while (!saisieCorrecte) {
@@ -110,12 +116,7 @@ public class InterfaceJeu {
             System.out.println("Indiquez votre proposition de "+jeu.getConfiguration().getTailleCombinaison()+" caractères parmi "+ jeu.getConfiguration().getListeValeursPossibles() + " [il vous reste "+jeu.getNombreEssaisRestants()+" essai(s)]");
             scanner = new Scanner(System.in);
             saisieUtilisateur = scanner.nextLine();
-            if ((this.jeuChoisi == 2)) {
-                saisieCorrecte = new ControleSaisie().controlerSaisieUtilisateurGenerique(saisieUtilisateur, jeu.getConfiguration().getTailleCombinaison(), jeu.getConfiguration().getListeValeursPossibles());
-            }
-            else {
-                saisieCorrecte = new ControleSaisie().controlerSaisieUtilisateurGenerique(saisieUtilisateur, jeu.getConfiguration().getTailleCombinaison(), jeu.getConfiguration().getListeValeursPossibles());
-            }
+            saisieCorrecte = new ControleSaisie().controlerSaisieUtilisateurGenerique(saisieUtilisateur, jeu.getConfiguration().getTailleCombinaison(), jeu.getConfiguration().getListeValeursPossibles());
             numeroSaisie++;
         }
         if (jeu.verifierCombinaison(saisieUtilisateur, combinaisonAtrouver)) {
@@ -125,6 +126,7 @@ public class InterfaceJeu {
         else {
             System.out.println("Proposition : " + saisieUtilisateur + " -> Réponse : "+ jeu.calculerReponseCombinaison(saisieUtilisateur, combinaisonAtrouver));
         }
+        logger.trace("Fin de tour de jeu en mode Challenger");
     }
 
     /**
@@ -134,6 +136,7 @@ public class InterfaceJeu {
      * @param jeu L'instance de jeu
      */
     private void jouerTourModeDefenseur(String derniereCombinaisonProposee, String derniereReponseUtilisateur, Jeu jeu) {
+        logger.trace("Début tour de jeu en mode Defenseur");
         if (this.numeroTour == 0) {
             if (jeuChoisi == 1) {
                 System.out.println("--> Veuillez choisir une combinaison de " + jeu.getConfiguration().getTailleCombinaison() + " caractères parmi la liste : " +jeu.getConfiguration().getListeValeursPossibles());
@@ -141,6 +144,8 @@ public class InterfaceJeu {
             else {
                 System.out.println("--> Veuillez choisir une combinaison de " + jeu.getConfiguration().getTailleCombinaison() + " chiffres parmi la liste : " +jeu.getConfiguration().getListeValeursPossibles());
             }
+            System.out.println("Le jeu démarre");
+            System.out.println("------------------------------------------------");
         }
         this.derniereCombinaisonProposee = jeu.proposerCombinaison(derniereCombinaisonProposee,derniereReponseUtilisateur);
         boolean saisieCorrecte = false;
@@ -179,6 +184,7 @@ public class InterfaceJeu {
             System.out.println("J'ai trouvé la réponse en " + (jeu.getConfiguration().getMaxEssais() - jeu.getNombreEssaisRestants()) + " essai(s)");
             jeuTermine = true;
         }
+        logger.trace("Fin tour de jeu en mode Defenseur");
     }
 
     /**
@@ -197,6 +203,7 @@ public class InterfaceJeu {
      * @param jeuDefenseur L'instance de jeu défenseur
      */
     private void jouerTourModeDuel(int numeroTour, String combinaisonAtrouver, Jeu jeuChallenger, String derniereCombinaisonProposee, String derniereReponseUtilisateur, Jeu jeuDefenseur) {
+        logger.trace("Début tour de jeu en mode Duel");
         System.out.println("***** Tour " + numeroTour + " *****");
         System.out.println("--> A votre tour");
         jouerTourModeChallenger(combinaisonAtrouver, jeuChallenger);
@@ -212,5 +219,6 @@ public class InterfaceJeu {
         else if (jeuDefenseur.getJeuFini()) {
             System.out.println("J'ai gagné ;-)");
         }
+        logger.trace("Fin tour de jeu en mode Duel");
     }
 }

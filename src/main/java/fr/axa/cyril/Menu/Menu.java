@@ -2,9 +2,10 @@ package fr.axa.cyril.Menu;
 
 import fr.axa.cyril.Controles.ControleSaisie;
 import fr.axa.cyril.Interface.InterfaceJeu;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-import java.io.File;
 
 /**
  * <b>Menu est la classe représentant le menu du jeu</b>
@@ -32,24 +33,32 @@ public class Menu {
 
     private final Configuration mastermindConf;
     private final Configuration recherchePlusMoinsConf;
-
+    private static Logger logger = LogManager.getLogger(Menu.class);
     /**
      * Constructeur du menu
      *
      * Il initialise les configurations des jeux
      */
     public Menu() {
-        System.out.println(new File("").getAbsolutePath());
+        logger.trace("Lancement du menu");
         mastermindConf = new Configuration();
-        mastermindConf.initConfiguration("/config.properties" , "mastermind");
         recherchePlusMoinsConf = new Configuration();
-        recherchePlusMoinsConf.initConfiguration("/config.properties" , "recherche");
+        try {
+            mastermindConf.initConfiguration("/config.properties", "mastermind");
+            recherchePlusMoinsConf.initConfiguration("/config.properties", "recherche");
+        } catch (Exception e) {
+            logger.error("Impossible d'ouvrir le fichier config.properties");
+            System.out.println("Impossible d'ouvrir le fichier config.properties");
+            System.exit(1);
+        }
+        logger.info("Fichier config.properties correctement chargé et configurations initialisées");
     }
 
     /**
      * Affichage du menu initial
      */
     public void affichageMenuInitial() {
+        logger.trace("Affichage du menu initial");
         affichageBandeauChoixJeu();
         int jeuChoisi = saisieMenu12ou123("Veuillez saisir 1 ou 2", "12");
         switch (jeuChoisi) {
@@ -88,6 +97,7 @@ public class Menu {
      * @param modePrecedent Mode de jeu précédent, pour rejouer dans les mêmes conditions
      */
     private void affichageMenuSuivant(int jeuPrecedent, int modePrecedent) {
+        logger.trace("Affichage du menu après avoir terminé une partie");
         affichageBandeauSuivant();
         int choix = saisieMenu12ou123("Veuillez saisir 1, 2 ou 3", "123");
         if (choix == 1) {
@@ -107,6 +117,7 @@ public class Menu {
         }
         else {
             System.out.println("A bientôt");
+            logger.trace("Sortie de l'application");
         }
     }
 
@@ -128,6 +139,7 @@ public class Menu {
                 saisie = new Scanner(System.in);
                 reponse = saisie.nextInt();
             } catch (InputMismatchException exceptionSaisie) {
+                logger.error("Mauvaise saisie de l'utilisateur");
                 System.out.println("Erreur de saisie !");
             }
             if (new ControleSaisie().controlerSaisieUtilisateurGenerique(Integer.toString(reponse), 1, valeursAttendues))

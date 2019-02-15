@@ -1,5 +1,8 @@
 package fr.axa.cyril.Jeu;
 import fr.axa.cyril.Menu.Configuration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,11 +44,15 @@ public class Mastermind extends Jeu {
 
     /**
      * Constructeur du jeu Mastermind
-     * @param configuration La configuration issue des informations fournies dans le config.properties
+     *
      */
+    private static Logger logger = LogManager.getLogger(Mastermind.class);
+
     public Mastermind(Configuration configuration) {
         super(configuration);
+        logger.info("Instanciation d'un objet Mastermind");
         this.scoreMaximum = 10 * this.getConfiguration().getTailleCombinaison();
+        logger.info("Fin de l'instanciation de l'objet Mastermind");
     }
 
     /**
@@ -59,10 +66,13 @@ public class Mastermind extends Jeu {
      * @return true si la combinaison a été trouvée, false sinon
      */
     public boolean verifierCombinaison(String saisieUtilisateur, String combinaisonAtrouver) {
-        //this.nombreEssaisRestants --;
+        boolean reponse;
+        logger.info("Vérification de combinaison -> chaine saisie : " + saisieUtilisateur + " | combinaison à trouver : " + combinaisonAtrouver);
         this.setNombreEssaisRestants(this.getNombreEssaisRestants()-1);
         int[] tableauScoreObtenu = this.calculerScoreCombinaison(saisieUtilisateur, combinaisonAtrouver);
-        return (transformerTableauScoreEnEntier(tableauScoreObtenu) == scoreMaximum);
+        reponse = (transformerTableauScoreEnEntier(tableauScoreObtenu) == scoreMaximum);
+        logger.debug("Résultat de la vérifification : " + reponse);
+        return (reponse);
     }
 
     /**
@@ -85,6 +95,7 @@ public class Mastermind extends Jeu {
      * la réponse figure forcément parmi les propositions non évaluées, et qui obtienne le même score par rapport à la proposition faite. On fonctionne donc par élimination de celles qui ont un score différent.
      * On commence par initialiser la liste des candidats (ie toutes les possibilités au premier tour) qu'on réduira ensuite à chaque itération
      *
+     *
      * Exemple à 3 chiffres : La combinaison secrète est 123. L'algorithme propose 000. Le score est donc de 00 (O bien placés, 0 mal placés)
      *     Par bijection, on peut donc en déduire que la combinaison secrète aura forcément un score de 00 par rapport à la dernière combinaison proposée 000
      *     C'est pourquoi on supprime de la liste des candidats toutes les possibilités dont le score est différent de 00, car elles n'inclueront forcément pas la combinaison secrète
@@ -94,20 +105,27 @@ public class Mastermind extends Jeu {
      * @return nouvelle proposition après application de l'algorithme
      */
     public String proposerCombinaison(String combinaisonEnCours, String saisieUtilisateur) {
+        logger.info("Proposition de combinaison");
         this.setNombreEssaisRestants(this.getNombreEssaisRestants()-1);
         String[] reponseAsplitter;
         int scoreReponse;
+        String reponse;
         if (combinaisonEnCours.equals("")) {
             listeCandidats = new ArrayList<>();
             construireListeInitialeRec(this.getConfiguration().getTailleCombinaison(), this.getConfiguration().getNombreCouleurs(), this.getConfiguration().getListeValeursPossibles(), "", listeCandidats);
-            return this.fournirCombinaisonDePoidsMinimum(listeCandidats);
+            reponse = this.fournirCombinaisonDePoidsMinimum(listeCandidats);
+            logger.debug("Réponse : " + reponse);
+            return reponse;
         }
         else {
             reponseAsplitter = saisieUtilisateur.split("-");
             scoreReponse = Integer.valueOf(reponseAsplitter[0])*10 + Integer.valueOf(reponseAsplitter[1]);
             listeCandidats.removeIf((String valeurCombinaisonCandidat) -> (this.transformerTableauScoreEnEntier(calculerScoreCombinaison(valeurCombinaisonCandidat, combinaisonEnCours)) != scoreReponse));
             //System.out.println("OK, on continue. Il me reste " + listeCandidats.size() + " combinaisons possibles");
-            return this.fournirCombinaisonDePoidsMinimum(listeCandidats);
+            logger.debug("Reste " + listeCandidats.size() + " combinaisons possibles");
+            reponse = this.fournirCombinaisonDePoidsMinimum(listeCandidats);
+            logger.debug("Combinaison proposée : " + reponse);
+            return reponse;
         }
     }
 
@@ -140,6 +158,7 @@ public class Mastermind extends Jeu {
      * @return combinaison de poids maximum qui sera proposé à l'utilisateur
      */
     private String fournirCombinaisonDePoidsMinimum(List<String> listeCandidatsRestants) {
+        logger.info("Fourniture de combinaison de poids minimum");
         int poidsMinimum=9999;
         int maxPoidsCombinaison;
         String combinaisonDePoidsMinimum = "";
@@ -150,6 +169,7 @@ public class Mastermind extends Jeu {
                 combinaisonDePoidsMinimum = valeurCombinaison;
             }
         }
+        //logger.debug("Combinaison proposée : " + combinaisonDePoidsMinimum);
         return combinaisonDePoidsMinimum;
     }
 

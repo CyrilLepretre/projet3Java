@@ -1,4 +1,7 @@
 package fr.axa.cyril.Menu;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -28,6 +31,7 @@ public class Configuration {
     private boolean modeDebug;
     private String listeValeursPossibles;
     private int nombreCouleurs;
+    private static Logger logger = LogManager.getLogger(Configuration.class);
 
     public Configuration() {
     }
@@ -39,6 +43,7 @@ public class Configuration {
      * @param jeu Le nom du jeu dont la configuration est instanciée (
      */
     public void initConfiguration(String cheminFichierProperties, String jeu) {
+        logger.trace("Début initialisation de la configuration du jeu " + jeu);
         InputStream input;
         Properties proprietes = new Properties();
         try {
@@ -53,8 +58,10 @@ public class Configuration {
             }
             input.close();
         } catch (IOException e) {
+            logger.error("Erreur à l'initialisation de la configuration du jeu " + jeu);
             System.out.println("Impossible de charger le fichier " + cheminFichierProperties);
         }
+        logger.trace("Fin initialisation de la configuration du jeu " + jeu);
     }
 
     /**

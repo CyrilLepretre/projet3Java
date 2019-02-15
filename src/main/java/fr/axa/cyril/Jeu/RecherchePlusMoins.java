@@ -1,6 +1,8 @@
 package fr.axa.cyril.Jeu;
 
 import fr.axa.cyril.Menu.Configuration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * <b>RecherchePlusMoins est la classe représentant une partie du jeu RecherchePlusMoins</b>
@@ -28,6 +30,7 @@ public class RecherchePlusMoins extends Jeu {
     private final int minimum;
     private int[] borneInf;
     private int[] borneSup;
+    private static Logger logger = LogManager.getLogger(RecherchePlusMoins.class);
 
     /**
      * Constructeur d'un jeu Recherche +/-
@@ -54,9 +57,11 @@ public class RecherchePlusMoins extends Jeu {
      * @return true si la combinaison secrète a été trouvée, false sinon
      */
     public boolean verifierCombinaison(String saisieUtilisateur, String combinaisonAtrouver) {
+        logger.info("Vérification de combinaison RecherchePlusMoins");
         this.setNombreEssaisRestants(this.getNombreEssaisRestants()-1);
         if (saisieUtilisateur.equals(combinaisonAtrouver)) {
             this.setJeuFini(true);
+            logger.debug("Combinaison trouvée => jeu terminé");
             return true;
         }
         else {
@@ -77,6 +82,7 @@ public class RecherchePlusMoins extends Jeu {
      * @return La chaîne de caractères correspondant à la réponse à afficher à l'utilisateur
      */
     public String calculerReponseCombinaison(String saisieUtilisateur, String combinaisonAtrouver) {
+        logger.info("Evaluation de la combinaison RecherchePlusMoins - Combinaison saisie : " + saisieUtilisateur + " | combinaison à trouver : " + combinaisonAtrouver);
         StringBuilder resultat = new StringBuilder(this.getConfiguration().getTailleCombinaison());
         for (int i=0; i<saisieUtilisateur.length(); i++) {
             if (Character.getNumericValue(saisieUtilisateur.charAt(i)) == Character.getNumericValue(combinaisonAtrouver.charAt(i))) {
@@ -89,6 +95,7 @@ public class RecherchePlusMoins extends Jeu {
                 resultat.append('+');
             }
         }
+        logger.debug("-> Résultat de l'évaluation : " + resultat.toString());
         return resultat.toString();
     }
 
@@ -101,6 +108,7 @@ public class RecherchePlusMoins extends Jeu {
      * @return la chaine de chiffres calculée par l'ordinateur
      */
     public String proposerCombinaison(String combinaisonEnCours, String saisieUtilisateur) {
+        logger.info("Proposition de combinaison RecherchePlusMoins - dernière combinaison proposée : " + combinaisonEnCours + " | réponse de l'utilisateur : " + saisieUtilisateur);
         this.setNombreEssaisRestants(this.getNombreEssaisRestants()-1);
         int complement;
         StringBuilder proposition = new StringBuilder(this.getConfiguration().getTailleCombinaison());
@@ -114,20 +122,24 @@ public class RecherchePlusMoins extends Jeu {
                 switch (saisieUtilisateur.charAt(i)) {
                     case '=' :
                         proposition.append(combinaisonEnCours.charAt(i));
+                        logger.debug("Caractère " + combinaisonEnCours.charAt(i) + " | évalué à = | Caractère proposé : " + combinaisonEnCours.charAt(i));
                         break;
                     case '-' :
                         complement = Character.getNumericValue(combinaisonEnCours.charAt(i)) - Math.max(((Character.getNumericValue(combinaisonEnCours.charAt(i)) - borneInf[i]) / 2), 1);
                         borneSup[i] = complement;
                         proposition.append(complement);
+                        logger.debug("Caractère " + combinaisonEnCours.charAt(i) + " | évalué à - | Caractère proposé : " + complement);
                         break;
                     case '+' :
                         complement = Character.getNumericValue(combinaisonEnCours.charAt(i)) + Math.max(((borneSup[i] - (Character.getNumericValue(combinaisonEnCours.charAt(i)))) / 2), 1);
                         proposition.append(complement);
                         borneInf[i] = complement;
+                        logger.debug("Caractère " + combinaisonEnCours.charAt(i) + " | évalué à + | Caractère proposé : " + complement);
                         break;
                 }
             }
         }
+        logger.debug("Proposition : " + proposition.toString());
         return proposition.toString();
     }
 
@@ -152,8 +164,10 @@ public class RecherchePlusMoins extends Jeu {
      * @return true si la réponse est cohérente, false sinon (ie la réponse amènerait à des propositions au delà des valeurs autorisées)
      */
     public boolean verifierErreurFonctionnelle(String saisieUtilisateur) {
+        logger.info("Vérification erreur fonctionnelle RecherchePlusMoins");
         for (int i=0; i < saisieUtilisateur.length(); i++) {
             if (((borneSup[i] == minimum) && (Character.valueOf(saisieUtilisateur.charAt(i)).equals('-'))) || ((borneInf[i] == maximum) && (Character.valueOf(saisieUtilisateur.charAt(i)).equals('+')))) {
+                logger.error("Erreur : borne sup = " + borneSup[i] + " | borne inf = " + borneInf[i] + " | utilisateur a saisie : " + saisieUtilisateur);
                 return false;
             }
         }

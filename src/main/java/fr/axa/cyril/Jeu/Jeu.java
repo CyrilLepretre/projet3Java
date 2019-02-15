@@ -1,6 +1,8 @@
 package fr.axa.cyril.Jeu;
 
 import fr.axa.cyril.Menu.Configuration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * <b>Classe abstraite pour un jeu</b>
@@ -18,6 +20,7 @@ public abstract class Jeu {
     private final Configuration configuration;
     private int nombreEssaisRestants;
     private boolean jeuFini;
+    private static Logger logger = LogManager.getLogger(Jeu.class);
 
     /**
      * Constructeur de jeu
@@ -55,10 +58,12 @@ public abstract class Jeu {
      * @return La combinaison
      */
     public String genererCombinaison(int tailleCombinaison) {
+        logger.info("Génération d'une combinaison de taille " + tailleCombinaison);
         StringBuilder combinaison = new StringBuilder(tailleCombinaison);
         for (int i=0; i<tailleCombinaison; i++) {
             combinaison.append(this.configuration.getListeValeursPossibles().charAt(this.genererChiffreRandom(tailleCombinaison)));
         }
+        logger.debug("Conbinaison générée : " + combinaison.toString());
         return combinaison.toString();
     }
 
@@ -68,8 +73,10 @@ public abstract class Jeu {
      * @return Le chiffre généré alétoirement
      */
     protected int genererChiffreRandom (int borneSup) {
+        logger.info("Génération d'un chiffre random de borne supérieure " + borneSup);
         if (borneSup < 1) {
             System.out.println("Erreur de borne supérieure, qui doit être supérieure ou égale à 1");
+            logger.error("Erreur de borne supérieure, qui doit être supérieure ou égale à 1");
             return 0;
         }
         else {
