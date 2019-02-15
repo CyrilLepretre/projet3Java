@@ -1,0 +1,12 @@
+.idea/
+target/archive-tmp
+target/classes
+target/generated-sources
+target/generated-test-sources
+target/maven-archiver
+target/maven-status
+target/target
+target/test-classes
+target/jeu-projet3.log
+target/Projet3Java-MastermindEtRecherche-1.0-SNAPSHOT.jar
+jeu-projet3.log
