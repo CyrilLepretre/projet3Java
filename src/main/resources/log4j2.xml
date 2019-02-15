@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="TRACE">
+<Configuration status="warn">
     <Properties>
-        <Property name="filename">target/jeu-projet3.log</Property>
+        <!--<Property name="filename">target/jeu-projet3.log</Property>-->
+        <Property name="filename">jeu-projet3.log</Property>
     </Properties>
     <Appenders>
-        <Console name="STDOUT">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
-        </Console>
         <File name="File" fileName="${filename}">
             <PatternLayout>
                 <pattern>%d %p %C{1.} [%t] %m%n</pattern>
@@ -14,8 +12,8 @@
         </File>
     </Appenders>
     <Loggers>
-        <Root level="trace">
-            <AppenderRef ref="File"></AppenderRef>
+        <Root level="error">
+            <AppenderRef ref="File"/>
         </Root>
     </Loggers>
 </Configuration>
