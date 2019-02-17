@@ -71,7 +71,7 @@ public class Configuration {
      */
     private void initConfigurationMastermind(Properties proprietes) {
         try {
-            this.nom =  "Mastermind";
+            this.nom =  "**** MASTERMIND ****";
             this.nombreCouleurs = Integer.valueOf(proprietes.getProperty("mastermind.nombreCouleurs"));
             this.listeValeursPossibles = proprietes.getProperty("mastermind.listeValeursPossibles").substring(0,this.nombreCouleurs);
             this.tailleCombinaison = Integer.valueOf(proprietes.getProperty("mastermind.tailleCombinaison"));
@@ -90,7 +90,7 @@ public class Configuration {
      */
     private void initConfigurationRecherchePlusMoins(Properties proprietes) {
         try {
-            this.nom =  "Recherche +/-";
+            this.nom =  "**** RECHERCHE +/- ****";
             this.listeValeursPossibles = proprietes.getProperty("recherche.listeValeursPossibles");
             this.tailleCombinaison = Integer.valueOf(proprietes.getProperty("recherche.tailleCombinaison"));
             this.maxEssais = Integer.valueOf(proprietes.getProperty("recherche.maxEssais"));

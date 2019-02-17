@@ -73,7 +73,7 @@ public class InterfaceJeu {
         derniereCombinaisonProposee = "";
         derniereReponseUtilisateur = "";
         jeuTermine = false;
-        numeroTour = 0;
+        numeroTour = 1;
         while ((partieJeu1.getNombreEssaisRestants() > 0) && (!jeuTermine))
         {
             switch (modeDeJeu) {
@@ -109,18 +109,18 @@ public class InterfaceJeu {
         logger.trace("Début tour de jeu en mode Challenger");
         boolean saisieCorrecte = false;
         int numeroSaisie = 0;
-        System.out.println("------------------------------------------------");
         while (!saisieCorrecte) {
             if (numeroSaisie > 0) {
                 System.out.println("ATTENTION : vous avez saisi un caractère ou un nombre de caractères différent de ce qui est attendu.");
             }
-            System.out.println("Indiquez votre proposition de "+jeu.getConfiguration().getTailleCombinaison()+" caractères parmi "+ jeu.getConfiguration().getListeValeursPossibles() + " [il vous reste "+jeu.getNombreEssaisRestants()+" essai(s)]");
+            System.out.println("Vous devez trouver ma combinaison secrète. Indiquez votre proposition de "+jeu.getConfiguration().getTailleCombinaison()+" caractères parmi "+ jeu.getConfiguration().getListeValeursPossibles() + " [il vous reste "+jeu.getNombreEssaisRestants()+" essai(s)]");
             scanner = new Scanner(System.in);
             saisieUtilisateur = scanner.nextLine();
             saisieCorrecte = new ControleSaisie().controlerSaisieUtilisateurGenerique(saisieUtilisateur, jeu.getConfiguration().getTailleCombinaison(), jeu.getConfiguration().getListeValeursPossibles());
             numeroSaisie++;
         }
         if (jeu.verifierCombinaison(saisieUtilisateur, combinaisonAtrouver)) {
+            System.out.println("Proposition : " + saisieUtilisateur + " -> Réponse : "+ jeu.calculerReponseCombinaison(saisieUtilisateur, combinaisonAtrouver));
             System.out.println("Félicitations, vous avez gagné en " + (jeu.getConfiguration().getMaxEssais() - jeu.getNombreEssaisRestants()) + " essai(s)");
             jeuTermine = true;
         }
@@ -128,6 +128,7 @@ public class InterfaceJeu {
             System.out.println("Proposition : " + saisieUtilisateur + " -> Réponse : "+ jeu.calculerReponseCombinaison(saisieUtilisateur, combinaisonAtrouver));
         }
         logger.trace("Fin de tour de jeu en mode Challenger");
+        System.out.println("------------------------------------------------");
     }
 
     /**
@@ -138,19 +139,17 @@ public class InterfaceJeu {
      */
     private void jouerTourModeDefenseur(String derniereCombinaisonProposee, String derniereReponseUtilisateur, Jeu jeu) {
         logger.trace("Début tour de jeu en mode Defenseur");
-        if (this.numeroTour == 0) {
+        if (this.numeroTour == 1) {
             if (jeuChoisi == 1) {
-                System.out.println("--> Veuillez choisir une combinaison de " + jeu.getConfiguration().getTailleCombinaison() + " caractères parmi la liste : " +jeu.getConfiguration().getListeValeursPossibles());
+                System.out.println("--> Veuillez choisir une combinaison (que je devrai trouver) de " + jeu.getConfiguration().getTailleCombinaison() + " caractères parmi la liste : " +jeu.getConfiguration().getListeValeursPossibles());
             }
             else {
-                System.out.println("--> Veuillez choisir une combinaison de " + jeu.getConfiguration().getTailleCombinaison() + " chiffres parmi la liste : " +jeu.getConfiguration().getListeValeursPossibles());
+                System.out.println("--> Veuillez choisir une combinaison (que je devrai trouver) de " + jeu.getConfiguration().getTailleCombinaison() + " chiffres parmi la liste : " +jeu.getConfiguration().getListeValeursPossibles());
             }
-            System.out.println("Le jeu démarre");
         }
         this.derniereCombinaisonProposee = jeu.proposerCombinaison(derniereCombinaisonProposee,derniereReponseUtilisateur);
         boolean saisieCorrecte = false;
         int numeroSaisie = 0;
-        System.out.println("------------------------------------------------");
         System.out.println("Voici ma proposition : " + this.derniereCombinaisonProposee + "    [" + jeu.getNombreEssaisRestants() + " essais restant(s)]");
         while (!saisieCorrecte) {
             if (numeroSaisie > 0) {
@@ -186,6 +185,7 @@ public class InterfaceJeu {
             jeuTermine = true;
         }
         logger.trace("Fin tour de jeu en mode Defenseur");
+        System.out.println("------------------------------------------------");
     }
 
     /**
@@ -205,19 +205,22 @@ public class InterfaceJeu {
      */
     private void jouerTourModeDuel(int numeroTour, String combinaisonAtrouver, Jeu jeuChallenger, String derniereCombinaisonProposee, String derniereReponseUtilisateur, Jeu jeuDefenseur) {
         logger.trace("Début tour de jeu en mode Duel");
-        System.out.println("***** Tour " + numeroTour + " *****");
-        System.out.println("--> A votre tour");
+        System.out.println("***** TOUR " + numeroTour + " *****");
+        System.out.println("******************");
+        System.out.println("--> A VOTRE TOUR");
         jouerTourModeChallenger(combinaisonAtrouver, jeuChallenger);
-        System.out.println("--> A mon tour");
+        System.out.println("--> A MON TOUR");
         jouerTourModeDefenseur(derniereCombinaisonProposee, derniereReponseUtilisateur, jeuDefenseur);
-
         if (jeuDefenseur.getJeuFini() && jeuChallenger.getJeuFini()) {
-            System.out.println("Egalité ! ");
+            System.out.println("\n-- FIN DU JEU --");
+            System.out.println("Egalité !");
         }
         else if (jeuChallenger.getJeuFini()) {
+            System.out.println("\n-- FIN DU JEU --");
             System.out.println("Bravo, vous m'avez battu ;-)");
         }
         else if (jeuDefenseur.getJeuFini()) {
+            System.out.println("\n-- FIN DU JEU --");
             System.out.println("J'ai gagné ;-)");
         }
         logger.trace("Fin tour de jeu en mode Duel");

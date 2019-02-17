@@ -73,6 +73,7 @@ public class Menu {
         }
         affichageBandeauChoixMode();
         int modeChoisi = saisieMenu12ou123("Veuillez saisir 1, 2 ou 3", "123");
+        System.out.println("\n################################################\n");
         if (jeuChoisi == 1) {
             InterfaceJeu interfaceMastermind = new InterfaceJeu();
             interfaceMastermind.lancerJeu(jeuChoisi, modeChoisi, mastermindConf);
@@ -158,8 +159,8 @@ public class Menu {
         System.out.println("                     MENU                      ");
         System.out.println("-----------------------------------------------");
         System.out.println("Les jeux disponibles : ");
-        System.out.println("1 : Mastermind");
-        System.out.println("2 : Recherche +/-");
+        System.out.println("  1 : Mastermind");
+        System.out.println("  2 : Recherche +/-");
         System.out.println("A quel jeu souhaitez-vous jouer ?");
     }
 
@@ -167,10 +168,11 @@ public class Menu {
      * Affichage du bandeau de choix du mode de jeu
      */
     private void affichageBandeauChoixMode() {
+        System.out.println("\n################################################\n");
         System.out.println("Les modes disponibles : ");
-        System.out.println("1 : Challenger ---------> Trouvez la combinaison secrète de l'ordinateur");
-        System.out.println("2 : Défenseur ----------> L'ordinateur doit trouver votre combinaison secrète");
-        System.out.println("3 : Duel ---------------> Jouez à tour de rôle contre l'ordinateur");
+        System.out.println("  1 : Challenger ---------> Trouvez la combinaison secrète de l'ordinateur");
+        System.out.println("  2 : Défenseur ----------> L'ordinateur doit trouver votre combinaison secrète");
+        System.out.println("  3 : Duel ---------------> Jouez à tour de rôle contre l'ordinateur");
         System.out.println("Quel mode choisissez-vous ?");
     }
 
@@ -178,7 +180,7 @@ public class Menu {
      * Affichage du bandeau de choix après avoir jouer à un jeu
      */
     private void affichageBandeauSuivant() {
-        System.out.println("################################################");
+        System.out.println("\n################################################\n");
         System.out.println("Que souhaitez-vous faire à présent ?");
         System.out.println("1 : Rejouer au même jeu et même mode");
         System.out.println("2 : Lancer un autre jeu");

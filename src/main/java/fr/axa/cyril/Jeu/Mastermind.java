@@ -72,6 +72,7 @@ public class Mastermind extends Jeu {
         int[] tableauScoreObtenu = this.calculerScoreCombinaison(saisieUtilisateur, combinaisonAtrouver);
         reponse = (transformerTableauScoreEnEntier(tableauScoreObtenu) == scoreMaximum);
         logger.debug("Résultat de la vérifification : " + reponse);
+        this.setJeuFini(reponse);
         return (reponse);
     }
 
@@ -255,7 +256,8 @@ public class Mastermind extends Jeu {
      */
     public boolean determinerSiFinJeu(String reponseEvalutionUtilisateur) {
         String[] reponseASplitter = reponseEvalutionUtilisateur.split("-");
-        return (Integer.valueOf(reponseASplitter[0]) == this.getConfiguration().getTailleCombinaison());
+        this.setJeuFini(Integer.valueOf(reponseASplitter[0]) == this.getConfiguration().getTailleCombinaison());
+        return this.getJeuFini();
     }
 
     /**

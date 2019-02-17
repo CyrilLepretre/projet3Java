@@ -8,10 +8,15 @@ S'agissant d'un projet Maven, la compilation se fait via la commande ```mvn pack
 
 Le jar _Projet3Java-MastermindEtRecherche-1.0-SNAPSHOT-jar-with-dependencies.jar_ mis à disposition intègre l'ensemble des librairies nécessaires au bon fonctionnement du jeu.
 
-Pour lancer le jeu :
+**Pour lancer le jeu :**
 - Sur Windows : 
 1. Copier le ficheir Projet3Java-MastermindEtRecherche-1.0-SNAPSHOT-jar-with-dependencies.jar en local
 2. Lancer une commande MS-DOS (cmd)
 3. Se placer dans le répertoire contenant le jar copié en étape 1.
 4. ```java -jar Projet3Java-MastermindEtRecherche-1.0-SNAPSHOT-jar-with-dependencies.jar```
 
+**Configuration**
+Pour activer le mode développeur et afficher les propositions secrètes de l'ordinateur, changer le fichier config.properties (par défaut, le mode développeur est activé) :
+
+- Mastermind : ```mastermind.modeDebug = true```
+- Recherche +/- : ```recherche.modeDebug = true```
